@@ -17,7 +17,7 @@ function getAuthorSegments(authorsStr: string, highlightName: string) {
 {sortedItems.length > 0 && (
 <section id="articles" class="py-6 md:py-10 scroll-mt-20">
   <div class="container mx-auto px-4 max-w-6xl">
-    <h2 class="text-4xl font-semibold tracking-tight text-foreground mb-8 border-b border-border pb-2">
+    <h2 class="sticky-section-header text-4xl font-semibold tracking-tight text-foreground mb-8 border-b border-border pb-2">
       Articles
     </h2>
     <div class="space-y-6 text-muted-foreground">
@@ -66,18 +66,6 @@ function getAuthorSegments(authorsStr: string, highlightName: string) {
               </span>
             )}
           </div>
-          {(item.doi) && (
-            <p class="text-sm mt-2">
-              <a
-                href={`https://doi.org/${item.doi}`}
-                class="text-primary hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                DOI: {item.doi}
-              </a>
-            </p>
-          )}
         </div>
       ))}
     </div>
