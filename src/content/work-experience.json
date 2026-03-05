@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "role": "Researcher",
+      "organization": "Lab of Applied Electronics, Department of Electrical and Computer Engineering, University of Patras",
+      "locationType": "Remote",
+      "relationshipType": "Contract",
+      "dateRange": "02.2025 – Present",
+      "description": "Collaborated in developing a Digital Twin to model an energy community of five schools in the city of Kalamata.",
+      "project": "SchoolHeroZ (EU Grant Agreement N° 101121530)"
+    },
+    {
+      "role": "Researcher",
+      "organization": "Lab of Applied Electronics, Department of Electrical and Computer Engineering, University of Patras",
+      "locationType": "Remote",
+      "relationshipType": "Contract",
+      "dateRange": "10.2022 – Present",
+      "description": "Collaborated in developing a Human Digital Twin enabled by wearable and virtual sensors to represent indoor air quality in human immediate vicinity.",
+      "project": "TwinAIR Project (EU Grant Agreement N° 101057779)"
+    },
+    {
+      "role": "Researcher",
+      "organization": "Lab of Applied Electronics, Department of Electrical and Computer Engineering, University of Patras",
+      "locationType": "Remote",
+      "relationshipType": "Contract",
+      "dateRange": "10.2020 – 08.2024",
+      "description": "Collaborated in developing a Consumer Digital Twin enabling participation in local energy markets while considering thermal comfort constraints.",
+      "project": "TwinERGY Project (EU Grant Agreement N° 957736)"
+    },
+    {
+      "role": "Back-end & R-Developer",
+      "organization": "European Dynamics",
+      "locationType": "On Premises",
+      "relationshipType": "Full Time",
+      "dateRange": "08.2019 – 08.2020",
+      "description": "Collaborated in developing the back-end infrastructure for web platforms for EU organizations including FRA, EBA, and Eurostat.",
+      "project": null
+    }
+  ]
+}

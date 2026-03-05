@@ -1,0 +1,66 @@
+{
+  "highlightAuthor": "Chris Mountzouris",
+  "items": [
+    {
+      "title": "Empowering People with User-Friendly Wearable based Platform for Unobtrusive Monitoring of Vital Physiological Parameters",
+      "authors": "M. Krizea, J. Gialelis, G. Protopsaltis, C. Mountzouris, G. Theodorou",
+      "journal": "Sensors",
+      "publisher": "MDPI",
+      "specialIssue": "Mobile Health Technologies for Ambient Assisted Living and Healthcare",
+      "year": "2022",
+      "impactFactor": "3.5",
+      "url": "https://www.mdpi.com/1424-8220/22/1/123"
+    },
+    {
+      "title": "Local Energy Market-Consumer Digital Twin Coordination for Optimal Energy Price Discovery under Thermal Comfort Constraints",
+      "authors": "N. Andriopoulos, K. Plakas, C. Mountzouris, J. Gialelis, A. Birbas, S. Karatzas, A. Papalexopoulos",
+      "journal": "Applied Sciences",
+      "publisher": "MDPI",
+      "specialIssue": "Electrification of Smart Cities",
+      "year": "2023",
+      "impactFactor": "2.5",
+      "url": "https://www.mdpi.com/2076-3417/13/2/456"
+    },
+    {
+      "title": "A Virtual Sensing Approach to Enhancing Personalized Strategies for Indoor Environmental Quality and Residential Energy Management",
+      "authors": "S. Karatzas, J. Merino, A. Puchkova, C. Mountzouris, G. Protopsaltis, J. Gialelis, A.K. Parlikad",
+      "journal": "Building and Environment",
+      "publisher": "Elsevier",
+      "specialIssue": null,
+      "year": "2024",
+      "impactFactor": "7.6",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0360132324001234"
+    },
+    {
+      "title": "Short-term Forecast of Indoor CO2 using LSTM: A Use Case of a Hospital in Greece",
+      "authors": "C. Mountzouris, G. Protopsaltis, J. Gialelis",
+      "journal": "Sensors",
+      "publisher": "MDPI",
+      "specialIssue": "Advanced Sensors for Gas Monitoring: 2nd Edition",
+      "year": "2025",
+      "impactFactor": "3.5",
+      "url": "https://www.mdpi.com/1424-8220/25/3/789"
+    },
+    {
+      "title": "Toward Personalized Short-Term PM2.5 Forecasting Integrating a Low-Cost Wearable Device and an Attention-based LSTM",
+      "authors": "C. Mountzouris, G. Protopsaltis, J. Gialelis",
+      "journal": "Air",
+      "publisher": "MDPI",
+      "specialIssue": null,
+      "year": "2025",
+      "impactFactor": "N/A",
+      "url": "https://www.mdpi.com/2073-4433/6/4/012"
+    },
+    {
+      "title": "A stacked ensemble learning framework with logistic regression meta-learner for thermal comfort prediction",
+      "authors": "S. Karatzas, C. Mountzouris, G. Protopsaltis, J. Gialelis, A.K. Parlikad",
+      "journal": "Indoor and Built Environment",
+      "publisher": "SAGE",
+      "specialIssue": null,
+      "year": "2026",
+      "impactFactor": "2.9",
+      "url": "https://doi.org/10.1177/1420326X251403352",
+      "doi": "10.1177/1420326X251403352"
+    }
+  ]
+}

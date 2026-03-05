@@ -1,0 +1,68 @@
+{
+  "highlightAuthor": "Chris Mountzouris",
+  "items": [
+    {
+      "title": "Determining occupant's Thermal Comfort and Well-Being towards facilitating energy demand management utilizing a low-cost wearable device",
+      "authors": "J. Gialelis, M. Krizea, G. Protopsaltis, C. Mountzouris, T. Kladas, G. Theodorou",
+      "conferenceName": "15th PErvasive Technologies Related to Assistive Environments (PETRA)",
+      "conferenceLocation": "Corfu, Greece",
+      "conferenceDate": "29.06.2022 - 01.07.2022",
+      "year": "2022",
+      "url": null
+    },
+    {
+      "title": "A multilevel demand response profiling and modeling solution enabled by digital twins' integration",
+      "authors": "C. Mountzouris, S. Karatzas, G. Protopsaltis, J. Gialelis",
+      "conferenceName": "2023 European Conference on Computing in Construction (EC³)",
+      "conferenceLocation": "Crete, Greece",
+      "conferenceDate": "10.07.2022 - 12.07.2022",
+      "year": "2023",
+      "url": null
+    },
+    {
+      "title": "Non-Interventional Precise TC Assessment for Enhancing Consumer Energy Flexibility",
+      "authors": "C. Mountzouris, G. Protopsaltis, J. Gialelis, G. Theodorou, N. Bali",
+      "conferenceName": "21th IEEE International Conference on Industrial Informatics",
+      "conferenceLocation": "Lemgo, Germany",
+      "conferenceDate": "17.07.2023 - 20.07.2023",
+      "year": "2023",
+      "url": null
+    },
+    {
+      "title": "Utilizing unobtrusive portable electronic devices for real-time assessment of indoor PM2.5 and tVOC exposure and its correlation with heart rate variability",
+      "authors": "D. Voultsidis, J. Gialelis, G. Protopsaltis, N. Bali, C. Mountzouris",
+      "conferenceName": "13th International Conference on Sustainable Energy Information Technology",
+      "conferenceLocation": "Halifax, Nova Scotia, Canada",
+      "conferenceDate": "14.08.2023 - 16.08.2023",
+      "year": "2023",
+      "url": null
+    },
+    {
+      "title": "The Impact of Gender and Age on Thermal Comfort",
+      "authors": "C. Mountzouris, G. Protopsaltis, J. Gialelis",
+      "conferenceName": "16th International Conference on Ambient Systems, Networks and Technologies",
+      "conferenceLocation": "Patras, Greece",
+      "conferenceDate": "22.04.2025 - 22.04.2025",
+      "year": "2025",
+      "url": null
+    },
+    {
+      "title": "A Novel Approach to Activity Recognition Based on Indoor Air Pollutant Data",
+      "authors": "M. Mentou, G. Protopsaltis, C. Mountzouris, J. Gialelis",
+      "conferenceName": "16th International Conference on Ambient Systems, Networks and Technologies",
+      "conferenceLocation": "Patras, Greece",
+      "conferenceDate": "22.04.2025 - 22.04.2025",
+      "year": "2025",
+      "url": null
+    },
+    {
+      "title": "A Short-term forecast of indoor CO2 using Gradient Boosting: A use case of a hospital in Greece",
+      "authors": "C. Mountzouris, G. Protopsaltis, J. Gialelis",
+      "conferenceName": "30th IEEE International Conference on Emerging Technologies and Factory Automation",
+      "conferenceLocation": "Porto, Portugal",
+      "conferenceDate": "09.09.2025 - 12.09.2025",
+      "year": "2025",
+      "url": null
+    }
+  ]
+}

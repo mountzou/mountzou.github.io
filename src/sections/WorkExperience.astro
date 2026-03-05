@@ -1,0 +1,56 @@
+---
+import workData from '../content/work-experience.json';
+const { items } = workData;
+const itemsWithRole = items.filter((item) => item.role && String(item.role).trim() !== '');
+---
+
+{itemsWithRole.length > 0 && (
+<section id="work-experience" class="py-6 md:py-10 scroll-mt-20">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <h2 class="text-4xl font-semibold tracking-tight text-foreground mb-8 border-b border-border pb-2">
+      Work Experience
+    </h2>
+    <div class="space-y-4 text-muted-foreground">
+      {itemsWithRole.map((item) => (
+        <div class="rounded-lg bg-gray-50 p-4">
+          <!-- Mobile: stacked -->
+          <div class="md:hidden space-y-2">
+            <p class="text-lg font-medium text-foreground tracking-tight leading-relaxed">{item.role}</p>
+            <span class="inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-xs font-medium font-mono text-muted-foreground">
+            <svg class="size-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {item.dateRange}
+          </span>
+            <p class="text-sm text-muted-foreground">{item.organization} · {item.locationType} · {item.relationshipType}</p>
+          </div>
+          <!-- Desktop: role and dateRange on same line -->
+          <div class="hidden md:block">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <p class="text-lg font-medium text-foreground tracking-tight leading-relaxed">{item.role}</p>
+              <span class="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-xs font-medium font-mono text-muted-foreground">
+            <svg class="size-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {item.dateRange}
+          </span>
+            </div>
+            <p class="text-sm mt-2 text-muted-foreground">{item.organization} · {item.locationType} · {item.relationshipType}</p>
+          </div>
+          {item.project && (
+            <p class="mt-2 text-sm text-muted-foreground italic">{item.project}</p>
+          )}
+          {item.description && (
+            <p class="mt-2 text-sm text-muted-foreground">{item.description}</p>
+          )}
+          {item.highlights?.length > 0 && (
+            <ul class="mt-3 list-disc list-inside space-y-1.5 text-sm">
+              {item.highlights.map((h) => <li>{h}</li>)}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+)}

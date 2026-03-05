@@ -1,0 +1,69 @@
+---
+import reposData from '../content/repos.json';
+const { owner, items } = reposData;
+const displayName = (name: string) => (owner ? `${owner}/${name}` : name);
+const itemsWithName = items.filter((item) => item.name && String(item.name).trim() !== '');
+---
+
+{itemsWithName.length > 0 && (
+<section id="repos" class="py-6 md:py-10 scroll-mt-20">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <h2 class="text-4xl font-semibold tracking-tight text-foreground mb-8 border-b border-border pb-2">
+      Repos
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {itemsWithName.map((repo) => (
+        <a
+          href={repo.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="block rounded-lg bg-gray-50 p-4 transition-colors group"
+        >
+          <div class="flex items-start gap-3">
+            <span
+              class="mt-1.5 h-3 w-1 shrink-0 rounded-full"
+              style={`background-color: ${repo.languageColor}`}
+              aria-hidden="true"
+            />
+            <div class="min-w-0 flex-1">
+              <h3 class="text-lg font-semibold text-foreground tracking-tight leading-relaxed group-hover:text-primary transition-colors truncate">
+                {displayName(repo.name)}
+              </h3>
+              {repo.description && (
+                <p class="mt-2 text-sm text-muted-foreground line-clamp-2">
+                  {repo.description}
+                </p>
+              )}
+              <div class="mt-4 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                <span class="flex items-center gap-1.5">
+                  <span
+                    class="h-2 w-2 rounded-full shrink-0"
+                    style={`background-color: ${repo.languageColor}`}
+                    aria-hidden="true"
+                  />
+                  {repo.language}
+                </span>
+                <span class="flex items-center gap-1">
+                  <svg class="size-3.5 shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                    <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z" />
+                  </svg>
+                  {repo.stars.toLocaleString()}
+                </span>
+                <span class="flex items-center gap-1">
+                  <svg class="size-3.5 shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                    <path d="M5 3.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm0 2.122a2.25 2.25 0 0 0-1.5 0v.878A2.25 2.25 0 0 0 5.75 8.5h1.5v2.128a2.251 2.251 0 1 0 1.5 0V8.5h1.5a2.25 2.25 0 0 0 2.25-2.25v-.878a2.25 2.25 0 0 0-1.5 0v.878a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 5 6.25v-.878Zm3.75 7.378a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm3-8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z" />
+                  </svg>
+                  {repo.forks.toLocaleString()}
+                </span>
+              </div>
+            </div>
+            <svg class="mt-1 size-4 shrink-0 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z" />
+            </svg>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+)}
