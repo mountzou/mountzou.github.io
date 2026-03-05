@@ -1,5 +1,6 @@
 ---
 import Main from '../layouts/main.astro';
+import Hero from '../components/Hero.astro';
 import Education from '../sections/Education.astro';
 import WorkExperience from '../sections/WorkExperience.astro';
 import Projects from '../sections/Projects.astro';
@@ -13,14 +14,7 @@ import Repos from '../sections/Repos.astro';
 
     {/* Render the header section */}
     <header class="py-6 md:py-10 border-b border-border">
-      <div class="container mx-auto px-4 max-w-6xl text-center">
-        <h1 class="text-5xl font-bold tracking-tight text-foreground md:text-5xl">
-          Chris Mountzouris
-        </h1>
-        <p class="mt-4 font-bold text-muted-foreground">
-          CV & Portfolio
-        </p>
-      </div>
+      <Hero />
     </header>
 
     {/* Render the `Education` section */}

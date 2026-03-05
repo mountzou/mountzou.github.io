@@ -1,25 +1,29 @@
-# Chris Mountzouris – Portfolio
+# mountzou.github.io
 
-Personal portfolio site built with [Astro](https://astro.build), Tailwind CSS, and shadcn/ui.
+![Astro](https://img.shields.io/badge/Astro-5.18.0-orange) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.1-blue) ![shadcn](https://img.shields.io/badge/shadcn-3.8.5-black)
+
+A static personal portfolio site built with Astro, Tailwind CSS, and shadcn/ui.
 
 ## Project structure
 
-The site is organized around **sections**: each visible block on the page (Education, Work, Projects, Repos, Articles, Conferences) is a separate section component under `src/sections/`. The homepage (`src/pages/index.astro`) composes these sections in order.
+The site is organized around **sections** — each section maps to a thematic area of a portfolio, including education, work experience, projects, repositories, and publications in journals and conference proceedings. Each section is implemented as a separate component under `src/sections/`.
 
-All section **data** is driven by JSON files in `src/content/`. The section components import the corresponding JSON and render it—no content is hard-coded in the section components. To update the site, edit the JSON files; adding or removing a section is done by changing the homepage and, if needed, adding a new section component and content file.
+All section content is sourced from dedicated JSON files under `src/content/` — no content is hard-coded in the components. To update a section's content, edit the corresponding JSON file.
 
 ## Data: content JSON files
 
 | File | Used by | Purpose |
 |------|---------|---------|
-| `education.json` | `Education.astro` | Education history |
-| `work-experience.json` | `WorkExperience.astro` | Jobs and roles |
+| `education.json` | `Education.astro` | Education |
+| `work-experience.json` | `WorkExperience.astro` | Work Experience |
 | `projects.json` | `Projects.astro` | Projects |
 | `repos.json` | `Repos.astro` | GitHub (or other) repositories |
-| `articles.json` | `Articles.astro` | Journal/publication articles |
-| `conferences.json` | `Conferences.astro` | Conference papers/talks |
+| `articles.json` | `Articles.astro` | Papers in journals |
+| `conferences.json` | `Conferences.astro` | Papers in conference proceedings |
 
 ## JSON schemas
+
+The structure of each .json file under `src/content/` is as follows:
 
 ### `src/content/education.json`
 
@@ -33,7 +37,7 @@ All section **data** is driven by JSON files in `src/content/`. The section comp
       "department": "string",
       "location": "string",
       "dateRange": "string",
-      "specialization": "string (optional)"
+      "specialization": "string"
     }
   ]
 }
@@ -105,8 +109,7 @@ All section **data** is driven by JSON files in `src/content/`. The section comp
       "specialIssue": "string | null",
       "year": "string",
       "impactFactor": "string",
-      "url": "string",
-      "doi": "string (optional)"
+      "url": "string"
     }
   ]
 }
@@ -145,14 +148,6 @@ All dependencies are declared in `package.json`. Install them with `npm install`
 | **tailwindcss**, **@tailwindcss/vite** | Tailwind CSS and Vite plugin |
 | **radix-ui** | Primitives for the shadcn Button component |
 | **class-variance-authority**, **clsx**, **tailwind-merge** | Styling utilities (used by `src/lib/utils.ts` and UI components) |
-
-### Development
-
-| Package | Purpose |
-|--------|---------|
-| **shadcn** | CLI to add and manage shadcn/ui components |
-| **tw-animate-css** | Animation utilities (imported in `src/styles/global.css`) |
-| **@types/react**, **@types/react-dom** | TypeScript types for React |
 
 ## Setup
 

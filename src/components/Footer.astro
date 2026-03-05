@@ -7,13 +7,12 @@ const profiles: { name: string; href: string; label: string; icon: string }[] = 
 ];
 ---
 
-<footer class="border-t border-border py-6 md:py-8">
+<footer class="border-t border-border py-6 md:py-6">
   <div class="container mx-auto px-4 max-w-6xl">
     <div class="flex flex-wrap items-center justify-between gap-4">
-      <nav class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground" aria-label="Footer">
+      <nav class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground font-light" aria-label="Footer">
         <a href="/#education" class="hover:text-foreground transition-colors">Education</a>
         <a href="/#work-experience" class="hover:text-foreground transition-colors">Work</a>
-        <a href="/#projects" class="hover:text-foreground transition-colors">Projects</a>
         <a href="/#repos" class="hover:text-foreground transition-colors">Repos</a>
         <a href="/#articles" class="hover:text-foreground transition-colors">Articles</a>
         <a href="/#conferences" class="hover:text-foreground transition-colors">Conferences</a>
@@ -42,8 +41,8 @@ const profiles: { name: string; href: string; label: string; icon: string }[] = 
       ))}
       </div>
     </div>
-    <p class="mt-6 text-center text-xs text-muted-foreground">
-      © {new Date().getFullYear()} Chris Mountzouris
+    <p class="mt-2 text-center text-xs text-muted-foreground font-light">
+      Built with ❤️ by Chris Mountzouris.
     </p>
   </div>
 </footer>

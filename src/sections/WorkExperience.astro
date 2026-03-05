@@ -5,12 +5,12 @@ const itemsWithRole = items.filter((item) => item.role && String(item.role).trim
 ---
 
 {itemsWithRole.length > 0 && (
-<section id="work-experience" class="py-6 md:py-10 scroll-mt-20">
+<section id="work-experience" class="py-6 md:py-6 scroll-mt-20">
   <div class="container mx-auto px-4 max-w-6xl">
-    <h2 class="sticky-section-header text-4xl font-semibold tracking-tight text-foreground mb-8 border-b border-border pb-2">
+    <h2 class="sticky-section-header text-4xl font-medium tracking-tight mb-8 border-b border-border pb-2">
       Work Experience
     </h2>
-    <div class="space-y-4 text-muted-foreground">
+    <div class="space-y-4 text-muted-foreground font-light">
 
       {itemsWithRole.map((item) => (
         <div class="rounded-lg bg-gray-50 p-4 flex flex-col">
