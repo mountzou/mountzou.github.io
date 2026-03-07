@@ -60,6 +60,16 @@
       "year": "2026",
       "impactFactor": "2.9",
       "url": "https://doi.org/10.1177/1420326X251403352"
+    },
+    {
+      "title": "A GraphRAG-Based Question-Answering System for Explainable and Advanced Reasoning over Air Quality Insights",
+      "authors": "C. Mountzouris, G. Protopsaltis, J. Gialelis",
+      "journal": "Air",
+      "publisher": "MDPI",
+      "specialIssue": null,
+      "year": "2026",
+      "impactFactor": "N/A",
+      "url": "https://doi.org/10.1177/1420326X251403352"
     }
   ]
 }
