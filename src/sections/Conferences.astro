@@ -1,53 +1,86 @@
 ---
-import conferencesData from '../content/conferences.json';
-const { items, highlightAuthor = '' } = conferencesData;
-const itemsWithTitle = items.filter((item) => item.title && String(item.title).trim() !== '');
-const sortedItems = [...itemsWithTitle].sort((a, b) => Number(b.year) - Number(a.year));
+import CardTitle from "../components/CardTitle.astro";
+import SectionTitle from "../components/SectionTitle.astro";
+
+import conferencesData from "../content/conferences.json";
+
+const { items, highlightAuthor = "" } = conferencesData;
+
+const itemsWithTitle = items.filter(
+  (item) => item.title && String(item.title).trim() !== ""
+);
+
+const sortedItems = [...itemsWithTitle].sort(
+  (a, b) => Number(b.year) - Number(a.year)
+);
+
+function hasText(value: unknown) {
+  return typeof value === "string" && value.trim() !== "";
+}
 
 function getAuthorSegments(authorsStr: string, highlightName: string) {
-  if (!highlightName?.trim()) return [{ name: authorsStr, highlight: false }];
-  const lastName = highlightName.trim().split(/\s+/).pop() ?? '';
-  return authorsStr.split(',').map((s) => s.trim()).map((name) => ({
-    name,
-    highlight: lastName && name.includes(lastName),
-  }));
+  if (!highlightName?.trim()) {
+    return [{ name: authorsStr, highlight: false }];
+  }
+
+  const lastName = highlightName.trim().split(/\s+/).pop() ?? "";
+
+  return authorsStr
+    .split(",")
+    .map((s) => s.trim())
+    .map((name) => ({
+      name,
+      highlight: Boolean(lastName) && name.includes(lastName),
+    }));
 }
 ---
 
 {sortedItems.length > 0 && (
-<section id="conferences" class="py-6 md:py-6 scroll-mt-20">
-  <div class="container mx-auto px-4 max-w-6xl">
-    <h2 class="sticky-section-header text-4xl font-medium tracking-tight">
-      Conferences
-    </h2>
-    <div class="space-y-6 text-muted-foreground font-light">
-      {sortedItems.map((item) => (
-        <div class="rounded-lg bg-gray-50 p-4">
-          <p class="text-lg font-medium text-foreground tracking-tight leading-relaxed">{item.title}</p>
-          <p class="text-sm mt-2">
-            {getAuthorSegments(item.authors, highlightAuthor).map((seg, i) => (
-              <>
-                {i > 0 ? ', ' : ''}
-                {seg.highlight ? <span class="underline">{seg.name}</span> : seg.name}
-              </>
-            ))}
-          </p>
-          <p class="text-sm mt-2">
-            {item.conferenceName} · {item.conferenceLocation} · {item.conferenceDate}
-          </p>
-          {item.url && (
-            <a
-              href={item.url}
-              class="mt-2 inline-block text-sm text-primary underline hover:no-underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              PDF →
-            </a>
-          )}
-        </div>
-      ))}
+  <section id="conferences" class="scroll-mt-20 py-6">
+    <div class="container mx-auto max-w-6xl px-4">
+      <SectionTitle title="Conferences" />
+
+      <div class="grid grid-cols-1 gap-6 font-light text-muted-foreground lg:grid-cols-3">
+        {sortedItems.map((item) => {
+          const authors = hasText(item.authors) ? item.authors.trim() : "";
+          const conferenceLine = [
+            item.conferenceName,
+            item.conferenceLocation,
+            item.conferenceDate,
+          ]
+            .filter((value) => typeof value === "string" && value.trim() !== "")
+            .join(" · ");
+
+          return (
+            <div class="flex h-full flex-col rounded-lg bg-gray-50 p-4">
+              <CardTitle title={item.title} />
+
+              <div class="mt-auto pt-4">
+                {authors && (
+                  <p class="text-sm">
+                    {getAuthorSegments(authors, highlightAuthor).map((seg, i) => (
+                      <>
+                        {i > 0 ? ", " : ""}
+                        {seg.highlight ? (
+                          <span class="underline">{seg.name}</span>
+                        ) : (
+                          seg.name
+                        )}
+                      </>
+                    ))}
+                  </p>
+                )}
+
+                {conferenceLine && (
+                  <p class="mt-2 text-sm">
+                    {conferenceLine}
+                  </p>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 )}

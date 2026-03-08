@@ -1,74 +1,150 @@
 ---
-import articlesData from '../content/articles.json';
-const { items, highlightAuthor = '' } = articlesData;
-const itemsWithTitle = items.filter((item) => item.title && String(item.title).trim() !== '');
-const sortedItems = [...itemsWithTitle].sort((a, b) => Number(b.year) - Number(a.year));
+import CardTitle from "../components/CardTitle.astro";
+import SectionTitle from "../components/SectionTitle.astro";
+
+import articlesData from "../content/articles.json";
+
+const { items, highlightAuthor = "" } = articlesData;
+
+const itemsWithTitle = items.filter(
+  (item) => item.title && String(item.title).trim() !== ""
+);
+
+const sortedItems = [...itemsWithTitle].sort(
+  (a, b) => Number(b.year) - Number(a.year)
+);
+
+function hasText(value: unknown) {
+  return typeof value === "string" && value.trim() !== "";
+}
 
 function getAuthorSegments(authorsStr: string, highlightName: string) {
   if (!highlightName?.trim()) return [{ name: authorsStr, highlight: false }];
-  const lastName = highlightName.trim().split(/\s+/).pop() ?? '';
-  return authorsStr.split(',').map((s) => s.trim()).map((name) => ({
-    name,
-    highlight: lastName && name.includes(lastName),
-  }));
+
+  const lastName = highlightName.trim().split(/\s+/).pop() ?? "";
+
+  return authorsStr
+    .split(",")
+    .map((s) => s.trim())
+    .map((name) => ({
+      name,
+      highlight: Boolean(lastName) && name.includes(lastName),
+    }));
 }
 ---
 
 {sortedItems.length > 0 && (
-<section id="articles" class="py-6 md:py-6 scroll-mt-20">
-  <div class="container mx-auto px-4 max-w-6xl">
-    <h2 class="sticky-section-header text-4xl font-medium tracking-tight">
-      Articles
-    </h2>
-    <div class="space-y-6 text-muted-foreground font-light">
-      {sortedItems.map((item) => (
-        <div class="rounded-lg bg-gray-50 p-4">
-          <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
-            {item.url ? (
-              <a
-                href={item.url}
-                class="text-lg font-medium text-foreground tracking-tight leading-relaxed no-underline hover:no-underline min-w-0 flex-1"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {item.title}
-              </a>
-            ) : (
-              <p class="text-lg font-medium text-foreground tracking-tight leading-relaxed min-w-0 flex-1">{item.title}</p>
-            )}
-            <span class="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-[12px] font-medium font-mono text-muted-foreground">
-              <svg class="size-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              {item.year}
-            </span>
-          </div>
-          <p class="text-sm mt-2">
-            {getAuthorSegments(item.authors, highlightAuthor).map((seg, i) => (
-              <>
-                {i > 0 ? ', ' : ''}
-                {seg.highlight ? <span class="underline">{seg.name}</span> : seg.name}
-              </>
-            ))}
-          </p>
-          <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-sm mt-2">
-            <p>
-              <span class="font-medium italic text-foreground tracking-tight leading-relaxed">{item.journal}</span>
-              {item.publisher && `, ${item.publisher}`}
-              {item.specialIssue && `, Special Issue: ${item.specialIssue}`}
-            </p>
-            {item.impactFactor && (
-              <span class="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-[12px] font-medium font-mono text-muted-foreground">
-                <svg class="size-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-                IF: {item.impactFactor}
-              </span>
-            )}
-          </div>
-        </div>
-      ))}
+  <section id="articles" class="scroll-mt-20 py-6">
+    <div class="container mx-auto max-w-6xl px-4">
+      <SectionTitle title="Articles" />
+
+      <div class="grid grid-cols-1 gap-6 font-light text-muted-foreground md:grid-cols-3">
+        {sortedItems.map((item) => {
+          const authors = hasText(item.authors) ? item.authors.trim() : "";
+
+          const journalLine = [
+            hasText(item.journal) ? item.journal.trim() : "",
+            hasText(item.publisher) ? item.publisher.trim() : "",
+          ]
+            .filter(Boolean)
+            .join(", ");
+
+          const specialIssue = hasText(item.specialIssue)
+            ? item.specialIssue.trim()
+            : "";
+
+          return (
+            <div class="h-full rounded-lg bg-gray-50 p-4">
+              <div class="flex h-full flex-col">
+                <div class="flex items-center justify-between gap-3">
+                  <span class="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-[12px] font-mono font-medium text-muted-foreground">
+                    <svg
+                      class="size-3.5 shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    {item.year}
+                  </span>
+
+                  {item.impactFactor && (
+                    <span class="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-[12px] font-mono font-medium text-muted-foreground">
+                      <svg
+                        class="size-3.5 shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                        />
+                      </svg>
+                      IF: {item.impactFactor}
+                    </span>
+                  )}
+                </div>
+
+                <div class="mt-4">
+                  {item.url ? (
+                    <a
+                      href={item.url}
+                      class="block min-w-0 no-underline hover:no-underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <CardTitle title={item.title} />
+                    </a>
+                  ) : (
+                    <CardTitle title={item.title} />
+                  )}
+                </div>
+
+                <div class="mt-auto pt-4">
+                  {authors && (
+                    <p class="text-sm">
+                      {getAuthorSegments(authors, highlightAuthor).map((seg, i) => (
+                        <>
+                          {i > 0 ? ", " : ""}
+                          {seg.highlight ? (
+                            <span class="underline">{seg.name}</span>
+                          ) : (
+                            seg.name
+                          )}
+                        </>
+                      ))}
+                    </p>
+                  )}
+
+                  {(journalLine || specialIssue) && (
+                    <div class="mt-2 text-sm">
+                      <p>
+                        {journalLine && (
+                          <span class="font-medium leading-relaxed tracking-tight text-foreground">
+                            {journalLine}
+                          </span>
+                        )}
+                        {specialIssue && `, Special Issue: ${specialIssue}`}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 )}

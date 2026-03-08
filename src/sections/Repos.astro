@@ -1,4 +1,7 @@
 ---
+import CardTitle from "../components/CardTitle.astro";
+import SectionTitle from "../components/SectionTitle.astro";
+
 import reposData from '../content/repos.json';
 const { owner, items } = reposData;
 const displayName = (name: string) => (owner ? `${owner}/${name}` : name);
@@ -8,9 +11,9 @@ const itemsWithName = items.filter((item) => item.name && String(item.name).trim
 {itemsWithName.length > 0 && (
 <section id="repos" class="py-6 md:py-6 scroll-mt-20">
   <div class="container mx-auto px-4 max-w-6xl">
-    <h2 class="sticky-section-header text-4xl font-medium tracking-tight">
-      Repos
-    </h2>
+
+    <SectionTitle title='Repos' />
+    
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {itemsWithName.map((repo) => (
         <a
@@ -20,13 +23,9 @@ const itemsWithName = items.filter((item) => item.name && String(item.name).trim
           class="block rounded-lg bg-gray-50 p-4 transition-colors group"
         >
           <div class="flex items-start gap-3">
-            <span
-              class="mt-1.5 h-3 w-1 shrink-0 rounded-full"
-              style={`background-color: ${repo.languageColor}`}
-              aria-hidden="true"
-            />
+            <div class="h-6 w-0.5 rounded-full bg-orange-500"></div>
             <div class="min-w-0 flex-1">
-              <h3 class="text-lg font-semibold text-foreground tracking-tight leading-relaxed group-hover:text-primary transition-colors truncate">
+              <h3 class="text-[19px] font-medium text-foreground tracking-tight leading-relaxed group-hover:text-primary transition-colors truncate">
                 {displayName(repo.name)}
               </h3>
               {repo.description && (
@@ -57,9 +56,6 @@ const itemsWithName = items.filter((item) => item.name && String(item.name).trim
                 </span>
               </div>
             </div>
-            <svg class="mt-1 size-4 shrink-0 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-              <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z" />
-            </svg>
           </div>
         </a>
       ))}
