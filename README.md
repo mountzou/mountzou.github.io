@@ -127,8 +127,7 @@ The structure of each .json file under `src/content/` is as follows:
       "conferenceName": "string",
       "conferenceLocation": "string",
       "conferenceDate": "string",
-      "year": "string",
-      "url": "string | null"
+      "year": "string"
     }
   ]
 }
