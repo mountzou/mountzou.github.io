@@ -1,0 +1,61 @@
+---
+// DarkModeToggle.astro – toggles dark mode and persists preference in localStorage
+---
+
+<button
+  type="button"
+  id="dark-mode-toggle"
+  class="inline-flex items-center justify-center rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+  aria-label="Toggle dark mode"
+  title="Toggle dark mode"
+>
+  <!-- Sun icon (shown in dark mode = click to go light) -->
+  <span class="dark:hidden" aria-hidden="true">
+    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364 2.636l-1.591 1.591M21 12h-2.25m-.364 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+    </svg>
+  </span>
+  <!-- Moon icon (shown in light mode = click to go dark) -->
+  <span class="hidden dark:inline" aria-hidden="true">
+    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+    </svg>
+  </span>
+</button>
+
+<script>
+  const STORAGE_KEY = 'theme';
+  const DARK_CLASS = 'dark';
+
+  function getStored(): 'dark' | 'light' | null {
+    if (typeof document === 'undefined') return null;
+    try {
+      const v = localStorage.getItem(STORAGE_KEY);
+      return v === 'dark' || v === 'light' ? v : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function setStored(value: 'dark' | 'light') {
+    try {
+      localStorage.setItem(STORAGE_KEY, value);
+    } catch {}
+  }
+
+  function applyTheme(isDark: boolean) {
+    const html = document.documentElement;
+    if (isDark) html.classList.add(DARK_CLASS);
+    else html.classList.remove(DARK_CLASS);
+  }
+
+  document.getElementById('dark-mode-toggle')?.addEventListener('click', () => {
+    const html = document.documentElement;
+    const isDark = html.classList.toggle(DARK_CLASS);
+    setStored(isDark ? 'dark' : 'light');
+  });
+
+  // Apply stored theme on load (in case script runs after first paint)
+  const stored = getStored();
+  if (stored !== null) applyTheme(stored === 'dark');
+</script>

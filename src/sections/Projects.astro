@@ -11,7 +11,7 @@ const itemsWithTitle = items.filter((item) => item.title && String(item.title).t
     <SectionTitle title="Projects" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-muted-foreground font-light">
       {itemsWithTitle.map((item) => (
-        <div class="rounded-lg border border-border bg-gray-50 p-4">
+        <div class="rounded-lg border border-border bg-card p-4">
           <p class="text-lg font-medium text-foreground tracking-tight leading-relaxed">{item.title}</p>
           <p class="text-sm mt-2">{item.description}</p>
           <div class="mt-3 flex flex-wrap gap-2">
