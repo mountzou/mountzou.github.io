@@ -37,6 +37,11 @@
     }
   }
 
+  function prefersDark(): boolean {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
   function setStored(value: 'dark' | 'light') {
     try {
       localStorage.setItem(STORAGE_KEY, value);
@@ -55,7 +60,10 @@
     setStored(isDark ? 'dark' : 'light');
   });
 
-  // Apply stored theme on load (in case script runs after first paint)
-  const stored = getStored();
-  if (stored !== null) applyTheme(stored === 'dark');
+  // Initial theme is applied by the inline script in layout <head> (no flash).
+  // When no explicit choice: follow system preference changes (e.g. OS dark/light switch)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (getStored() !== null) return;
+    applyTheme(prefersDark());
+  });
 </script>
