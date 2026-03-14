@@ -1,4 +1,5 @@
 ---
+import SectionTitle from "../components/SectionTitle.astro";
 import projectsData from '../content/projects.json';
 const { items } = projectsData;
 const itemsWithTitle = items.filter((item) => item.title && String(item.title).trim() !== '');
@@ -7,9 +8,7 @@ const itemsWithTitle = items.filter((item) => item.title && String(item.title).t
 {itemsWithTitle.length > 0 && (
 <section id="projects" class="py-6 md:py-10 scroll-mt-20">
   <div class="container mx-auto px-4 max-w-6xl">
-    <h2 class="sticky-section-header text-4xl font-medium tracking-tight">
-      Projects
-    </h2>
+    <SectionTitle title="Projects" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-muted-foreground font-light">
       {itemsWithTitle.map((item) => (
         <div class="rounded-lg border border-border bg-gray-50 p-4">

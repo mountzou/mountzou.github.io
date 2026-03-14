@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -97,7 +95,15 @@
     }
 }
 
-.sticky-section-header {
+.sticky-sentinel {
+  display: block;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+.sticky-section-header-root {
   position: sticky;
   top: 0;
   z-index: 10;
@@ -105,4 +111,9 @@
   padding-top: 1rem;
   padding-bottom: 1rem;
   margin-top: -0.25rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.sticky-section-header-root.is-stuck {
+  box-shadow: 0 1px 0 var(--border);
 }

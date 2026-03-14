@@ -1,8 +1,8 @@
 # mountzou.github.io
 
-![Astro](https://img.shields.io/badge/Astro-5.18.0-orange) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.1-blue) ![shadcn](https://img.shields.io/badge/shadcn-3.8.5-black)
+![Astro](https://img.shields.io/badge/Astro-5.18.0-orange) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.1-blue)
 
-A static personal portfolio site built with Astro, Tailwind CSS, and shadcn/ui.
+A static personal portfolio site built with Astro and Tailwind CSS.
 
 ## Project structure
 
@@ -142,11 +142,7 @@ All dependencies are declared in `package.json`. Install them with `npm install`
 | Package | Purpose |
 |--------|---------|
 | **astro** | Static site framework |
-| **@astrojs/react** | React integration for Astro |
-| **react**, **react-dom** | React (for UI components) |
 | **tailwindcss**, **@tailwindcss/vite** | Tailwind CSS and Vite plugin |
-| **radix-ui** | Primitives for the shadcn Button component |
-| **class-variance-authority**, **clsx**, **tailwind-merge** | Styling utilities (used by `src/lib/utils.ts` and UI components) |
 
 ## Setup
 
