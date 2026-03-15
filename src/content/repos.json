@@ -9,6 +9,15 @@
       "languageColor": "#ff5a03",
       "stars": 0,
       "forks": 0
+    },
+    {
+      "name": "markdown-editor",
+      "description": "A client-side Markdown editor with LaTeX and code syntax support.",
+      "url": "https://mountzou.github.io/markdown-editor/",
+      "language": "TypeScript",
+      "languageColor": "#007acc",
+      "stars": 0,
+      "forks": 0
     }
   ]
 }

@@ -2,7 +2,9 @@
 
 ![Astro](https://img.shields.io/badge/Astro-5.18.0-orange) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.1-blue)
 
-A static personal portfolio site built with Astro and Tailwind CSS.
+A minimal static personal portfolio site built with Astro and Tailwind CSS.
+
+**Visit site:** [mountzou.github.io](https://mountzou.github.io)
 
 ## Project structure
 

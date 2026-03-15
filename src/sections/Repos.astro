@@ -23,7 +23,11 @@ const itemsWithName = items.filter((item) => item.name && String(item.name).trim
           class="block rounded-lg bg-card p-4 transition-colors group"
         >
           <div class="flex items-start gap-3">
-            <div class="h-6 w-0.5 rounded-full bg-orange-500"></div>
+            <div
+              class="h-6 w-0.5 rounded-full shrink-0"
+              style={`background-color: ${repo.languageColor}`}
+              aria-hidden="true"
+            ></div>
             <div class="min-w-0 flex-1">
               <h3 class="text-[19px] font-medium text-foreground tracking-tight leading-relaxed group-hover:text-primary transition-colors truncate">
                 {displayName(repo.name)}
