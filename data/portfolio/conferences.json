@@ -7,7 +7,11 @@
       "conferenceName": "15th PErvasive Technologies Related to Assistive Environments (PETRA)",
       "conferenceLocation": "Corfu, Greece",
       "conferenceDate": "29.06.2022 - 01.07.2022",
-      "year": "2022"
+      "year": "2022",
+      "url_doi": "",
+      "url_researchgate": "N/A",
+      "url_google_scholar": "N/A",
+      "citations": "6"
     },
     {
       "title": "A multilevel demand response profiling and modeling solution enabled by digital twins' integration",
@@ -15,7 +19,11 @@
       "conferenceName": "2023 European Conference on Computing in Construction (EC³)",
       "conferenceLocation": "Crete, Greece",
       "conferenceDate": "10.07.2022 - 12.07.2022",
-      "year": "2023"
+      "year": "2023",
+      "url_doi": "",
+      "url_researchgate": "N/A",
+      "url_google_scholar": "N/A",
+      "citations": "0"
     },
     {
       "title": "Non-Interventional Precise TC Assessment for Enhancing Consumer Energy Flexibility",
@@ -23,7 +31,11 @@
       "conferenceName": "21th IEEE International Conference on Industrial Informatics",
       "conferenceLocation": "Lemgo, Germany",
       "conferenceDate": "17.07.2023 - 20.07.2023",
-      "year": "2023"
+      "year": "2023",
+      "url_doi": "",
+      "url_researchgate": "N/A",
+      "url_google_scholar": "N/A",
+      "citations": "2"
     },
     {
       "title": "Utilizing unobtrusive portable electronic devices for real-time assessment of indoor PM2.5 and tVOC exposure and its correlation with heart rate variability",
@@ -31,7 +43,11 @@
       "conferenceName": "13th International Conference on Sustainable Energy Information Technology",
       "conferenceLocation": "Halifax, Nova Scotia, Canada",
       "conferenceDate": "14.08.2023 - 16.08.2023",
-      "year": "2023"
+      "year": "2023",
+      "url_doi": "",
+      "url_researchgate": "N/A",
+      "url_google_scholar": "N/A",
+      "citations": "5"
     },
     {
       "title": "The Impact of Gender and Age on Thermal Comfort",
@@ -39,7 +55,11 @@
       "conferenceName": "16th International Conference on Ambient Systems, Networks and Technologies",
       "conferenceLocation": "Patras, Greece",
       "conferenceDate": "22.04.2025 - 22.04.2025",
-      "year": "2025"
+      "year": "2025",
+      "url_doi": "",
+      "url_researchgate": "N/A",
+      "url_google_scholar": "N/A",
+      "citations": "4"
     },
     {
       "title": "A Novel Approach to Activity Recognition Based on Indoor Air Pollutant Data",
@@ -47,7 +67,11 @@
       "conferenceName": "16th International Conference on Ambient Systems, Networks and Technologies",
       "conferenceLocation": "Patras, Greece",
       "conferenceDate": "22.04.2025 - 22.04.2025",
-      "year": "2025"
+      "year": "2025",
+      "url_doi": "",
+      "url_researchgate": "N/A",
+      "url_google_scholar": "N/A",
+      "citations": "4"
     },
     {
       "title": "A Short-term forecast of indoor CO2 using Gradient Boosting: A use case of a hospital in Greece",
@@ -55,7 +79,11 @@
       "conferenceName": "30th IEEE International Conference on Emerging Technologies and Factory Automation",
       "conferenceLocation": "Porto, Portugal",
       "conferenceDate": "09.09.2025 - 12.09.2025",
-      "year": "2025"
+      "year": "2025",
+      "url_doi": "",
+      "url_researchgate": "N/A",
+      "url_google_scholar": "N/A",
+      "citations": "1"
     }
   ]
 }

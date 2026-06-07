@@ -1,0 +1,33 @@
+{
+  "owner": "mountzou",
+  "items": [
+    {
+      "name": "mountzou.github.io",
+      "description": "Personal portfolio and research site built with Astro and Tailwind CSS.",
+      "url": "https://github.com/mountzou/mountzou.github.io",
+      "language": "Astro",
+      "languageColor": "#ff5a03",
+      "stars": 0,
+      "forks": 0,
+      "issues": 0,
+      "status": "active",
+      "tags": ["astro", "tailwind", "claude"],
+      "license": "MIT",
+      "updatedAt": "3 days ago"
+    },
+    {
+      "name": "markdown-editor",
+      "description": "A client-side Markdown editor with LaTeX and code syntax support.",
+      "url": "https://github.com/mountzou/markdown-editor",
+      "language": "TypeScript",
+      "languageColor": "#3178c6",
+      "stars": 0,
+      "forks": 0,
+      "issues": 0,
+      "status": "active",
+      "tags": ["markdown", "latex", "editor"],
+      "license": "MIT",
+      "updatedAt": "1 month ago"
+    }
+  ]
+}

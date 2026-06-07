@@ -1,0 +1,20 @@
+---
+interface Props {
+  command: string;
+  title: string;
+  count: number;
+}
+
+const { command, title, count } = Astro.props;
+---
+
+<div>
+  <div>
+    <span>$</span> ls<br />
+    <span>{command}/</span>
+  </div>
+  <h2>// {title}</h2>
+  <div aria-label={`${count} items`}>
+    ——— {String(count).padStart(2, "0")} ———
+  </div>
+</div>

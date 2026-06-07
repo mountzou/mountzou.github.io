@@ -1,22 +1,7 @@
 ---
 import CardTitle from "../components/CardTitle.astro";
 import SectionTitle from "../components/SectionTitle.astro";
-
-import conferencesData from "../content/conferences.json";
-
-const { items, highlightAuthor = "" } = conferencesData;
-
-const itemsWithTitle = items.filter(
-  (item) => item.title && String(item.title).trim() !== ""
-);
-
-const sortedItems = [...itemsWithTitle].sort(
-  (a, b) => Number(b.year) - Number(a.year)
-);
-
-function hasText(value: unknown) {
-  return typeof value === "string" && value.trim() !== "";
-}
+import { conferenceHighlightAuthor, conferenceItems } from "../lib/portfolio";
 
 function getAuthorSegments(authorsStr: string, highlightName: string) {
   if (!highlightName?.trim()) {
@@ -35,34 +20,34 @@ function getAuthorSegments(authorsStr: string, highlightName: string) {
 }
 ---
 
-{sortedItems.length > 0 && (
-  <section id="conferences" class="scroll-mt-20 py-6">
-    <div class="container mx-auto max-w-6xl px-4">
+{conferenceItems.length > 0 && (
+  <section id="conferences" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-6 text-slate-950">
+    <div>
       <SectionTitle title="Conferences" />
 
-      <div class="grid grid-cols-1 gap-6 font-light text-muted-foreground lg:grid-cols-3">
-        {sortedItems.map((item) => {
-          const authors = hasText(item.authors) ? item.authors.trim() : "";
+      <div>
+        {conferenceItems.map((item) => {
+          const authors = item.authors;
           const conferenceLine = [
             item.conferenceName,
             item.conferenceLocation,
             item.conferenceDate,
           ]
-            .filter((value) => typeof value === "string" && value.trim() !== "")
+            .filter(Boolean)
             .join(" · ");
 
           return (
-            <div class="flex h-full flex-col rounded-lg bg-card p-4">
+            <div>
               <CardTitle title={item.title} />
 
-              <div class="mt-auto pt-4">
+              <div>
                 {authors && (
-                  <p class="text-sm">
-                    {getAuthorSegments(authors, highlightAuthor).map((seg, i) => (
+                  <p>
+                    {getAuthorSegments(authors, conferenceHighlightAuthor).map((seg, i) => (
                       <>
                         {i > 0 ? ", " : ""}
                         {seg.highlight ? (
-                          <span class="underline">{seg.name}</span>
+                          <span>{seg.name}</span>
                         ) : (
                           seg.name
                         )}
@@ -72,7 +57,7 @@ function getAuthorSegments(authorsStr: string, highlightName: string) {
                 )}
 
                 {conferenceLine && (
-                  <p class="mt-2 text-sm">
+                  <p>
                     {conferenceLine}
                   </p>
                 )}

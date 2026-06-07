@@ -1,39 +1,1398 @@
 ---
+import Footer from '../components/Footer.astro';
 import Main from '../layouts/main.astro';
-import Hero from '../components/Hero.astro';
-import Education from '../sections/Education.astro';
-import WorkExperience from '../sections/WorkExperience.astro';
-import Projects from '../sections/Projects.astro';
-import Articles from '../sections/Articles.astro';
-import Conferences from '../sections/Conferences.astro';
-import Repos from '../sections/Repos.astro';
+import { Icon } from '@iconify/react/offline';
+import { icons as academicons } from '@iconify-json/academicons';
+import {
+  articleHighlightAuthor,
+  articleItems,
+  conferenceHighlightAuthor,
+  conferenceItems,
+  educationItems,
+  repoItems,
+  repoOwner,
+  workExperienceItems,
+} from '../lib/portfolio';
+
+interface AuthorSegment {
+  name: string;
+  highlight: boolean;
+}
+
+const navItems = [
+  { label: 'Education', href: '#education' },
+  { label: 'Work', href: '#work-experience' },
+  { label: 'Repos', href: '#repos' },
+  { label: 'Articles', href: '#articles' },
+  { label: 'Conferences', href: '#conferences' },
+];
+
+const impactFactorIcon = {
+  width: 24,
+  height: 24,
+  body: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 17l6-6 4 4 6-8m0 0h-5m5 0v5"/>',
+};
+
+const jcrIcon = {
+  width: 24,
+  height: 24,
+  body: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20V10m6 10V4m6 16v-7m4 7H3"/>',
+};
+
+const citationsIcon = {
+  width: 24,
+  height: 24,
+  body: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h5v5c0 3-1.8 5-5 5m10-10h4v5c0 3-1.8 5-5 5"/>',
+};
+
+const yearIcon = {
+  width: 24,
+  height: 24,
+  body: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h14M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>',
+};
+
+const dateIcon = {
+  width: 24,
+  height: 24,
+  body: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+};
+
+const licenseIcon = {
+  width: 24,
+  height: 24,
+  body: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l7 4v5c0 4.4-2.9 8.3-7 9-4.1-.7-7-4.6-7-9V7l7-4z"/>',
+};
+
+const thesisIcon = {
+  width: 24,
+  height: 24,
+  body: '<rect x="5" y="4" width="14" height="16" rx="1" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M8 9h8M8 13h8M8 17h5"/>',
+};
+
+const googleScholarIcon = { ...academicons.icons['google-scholar'], height: 512 };
+const researchGateIcon = { ...academicons.icons.researchgate, height: 512 };
+const monthNames = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+function splitDateRange(dateRange: string) {
+  return dateRange.split(/\s+[–-]\s+/).map((part) => part.trim());
+}
+
+function educationDisplayDate(dateRange: string) {
+  const [start, end] = splitDateRange(dateRange);
+  if (!end || /present/i.test(end)) return `${start} - Present`;
+  return `${start} - ${end}`;
+}
+
+function educationGpaParts(gpa: string) {
+  const match = gpa.match(/^(.+?)\/(\d+(?:\.\d+)?)$/);
+  if (!match) return null;
+  return { value: match[1], denominator: match[2] };
+}
+
+function isOngoingEducation(dateRange: string) {
+  const [, end] = splitDateRange(dateRange);
+  if (!end || /present/i.test(end)) return true;
+
+  const dotted = end.match(/(\d{2})\.(\d{4})/);
+  if (dotted) {
+    const endDate = new Date(Number(dotted[2]), Number(dotted[1]));
+    return endDate >= new Date();
+  }
+
+  const yearOnly = end.match(/\d{4}/)?.[0];
+  return yearOnly ? Number(yearOnly) >= new Date().getFullYear() : false;
+}
+
+function workProjectName(project: string) {
+  return project.replace(/\s*\(.+\)$/, '').trim();
+}
+
+function repoStatusLabel(status: string) {
+  switch (status.toLowerCase()) {
+    case 'wip':
+      return 'WIP';
+    case 'archived':
+      return 'ARCHIVED';
+    default:
+      return 'ACTIVE';
+  }
+}
+
+function repoStatusClass(status: string) {
+  switch (status.toLowerCase()) {
+    case 'wip':
+      return 'bg-amber-50 text-amber-700 ring-amber-200';
+    case 'archived':
+      return 'bg-slate-100 text-slate-500 ring-slate-200';
+    default:
+      return 'bg-emerald-50 text-emerald-700 ring-emerald-200';
+  }
+}
+
+function getAuthorSegments(authorsStr: string, highlightName: string): AuthorSegment[] {
+  if (!highlightName?.trim()) return [{ name: authorsStr, highlight: false }];
+
+  const lastName = highlightName.trim().split(/\s+/).pop() ?? '';
+
+  return authorsStr
+    .split(',')
+    .map((name) => name.trim())
+    .map((name) => ({
+      name,
+      highlight: Boolean(lastName) && name.includes(lastName),
+    }));
+}
+
+function publicationKind(specialIssue: string) {
+  return specialIssue ? 'Special Issue' : 'Journal Article';
+}
+
+function metricValue(value: string) {
+  return value && value !== 'N/A' ? value : '—';
+}
+
+function articleNumericValue(value: string) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function isOpenAccessArticle(item: { publisher: string; url: string }) {
+  return /mdpi/i.test(item.publisher) || /mdpi\.com/i.test(item.url);
+}
+
+function isFirstAuthorArticle(authorsStr: string, highlightName: string) {
+  if (!highlightName?.trim() || !authorsStr?.trim()) return false;
+
+  const lastName = highlightName.trim().split(/\s+/).pop() ?? '';
+  const firstAuthor = authorsStr.split(',')[0]?.trim() ?? '';
+
+  return Boolean(lastName) && firstAuthor.includes(lastName);
+}
+
+function conferenceDateValue(dateRange: string) {
+  const firstDate = dateRange.split(/\s*-\s*/)[0] ?? '';
+  const match = firstDate.match(/(\d{2})\.(\d{2})\.(\d{4})/);
+  if (!match) return 0;
+
+  const [, day, month, year] = match;
+  return Number(`${year}${month}${day}`);
+}
+
+function isGreeceConference(location: string) {
+  return /greece/i.test(location);
+}
+
+function isIeeeConference(name: string) {
+  return /ieee/i.test(name);
+}
+
+function jcrBadgeClass(value: string) {
+  switch (value) {
+    case 'Q1':
+      return 'bg-emerald-100 text-emerald-700 ring-emerald-200';
+    case 'Q2':
+      return 'bg-blue-100 text-blue-700 ring-blue-200';
+    case 'Q3':
+      return 'bg-amber-100 text-amber-700 ring-amber-200';
+    case 'Q4':
+      return 'bg-rose-100 text-rose-700 ring-rose-200';
+    default:
+      return '';
+  }
+}
+
+function googleScholarUrl(title: string) {
+  return `https://scholar.google.com/scholar?q=${encodeURIComponent(title)}`;
+}
+
+function researchGateUrl(title: string) {
+  return `https://www.researchgate.net/search/publication?q=${encodeURIComponent(title)}`;
+}
+
+function monthYear(dateRange: string, fallbackYear: string) {
+  const firstDate = dateRange.split(/\s*-\s*/)[0] ?? '';
+  const [, , month, year] = firstDate.match(/(\d{2})\.(\d{2})\.(\d{4})/) ?? [];
+  const monthIndex = Number(month) - 1;
+  return month && (year || fallbackYear) ? `${monthNames[monthIndex] ?? ''} ${fallbackYear || year}` : fallbackYear;
+}
+
+function conferenceCode(name: string, year: string) {
+  if (/PErvasive Technologies/i.test(name)) return `PETRA ${year}`;
+  if (/Computing in Construction/i.test(name)) return `EC³ ${year}`;
+  if (/Industrial Informatics/i.test(name)) return `INDIN ${year}`;
+  if (/Sustainable Energy Information Technology/i.test(name)) return `SEIT ${year}`;
+  if (/Ambient Systems/i.test(name)) return `ANT ${year}`;
+  if (/Emerging Technologies and Factory Automation/i.test(name)) return `ETFA ${year}`;
+  return year;
+}
+
 ---
 
 <Main>
-  <main>
+  <main id="top">
+    <header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
+      <div class="mx-auto flex min-h-14 max-w-[92rem] flex-wrap items-center justify-between gap-y-2 px-5 py-2.5 text-slate-950 lg:px-8">
+        <a
+          href="#top"
+          class="inline-flex w-fit items-center no-underline"
+          aria-label="Chris Mountzouris home"
+        >
+          <span class="font-heading text-[0.95rem] font-medium leading-none tracking-[-0.02em] text-slate-950">
+            Chris Mountzouris
+          </span>
+        </a>
 
-    {/* Render the header section */}
-    <header class="py-6 md:py-10 border-b border-border">
-      <Hero />
+        <nav
+          aria-label="Primary"
+          class="flex flex-wrap items-center justify-center gap-0.5"
+        >
+          {navItems.map((item, index) => (
+            <a
+              href={item.href}
+              data-nav-link={item.href}
+              class={`inline-flex items-baseline gap-1.5 rounded-full px-2.5 py-1.5 font-heading text-[0.85rem] font-medium no-underline transition hover:text-slate-950 ${
+                index === 0 ? 'bg-amber-50 text-slate-950' : 'text-slate-500'
+              }`}
+            >
+              <span class="text-[0.7rem] font-semibold text-amber-600">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      </div>
     </header>
 
-    {/* Render the `Education` section */}
-    <Education />
+    <script>
+      function setActiveNavLink(href: string) {
+        document.querySelectorAll<HTMLAnchorElement>('[data-nav-link]').forEach((link) => {
+          const isActive = link.getAttribute('href') === href;
+          link.classList.toggle('bg-amber-50', isActive);
+          link.classList.toggle('text-slate-950', isActive);
+          link.classList.toggle('text-slate-500', !isActive);
+        });
+      }
 
-    {/* Render the `WorkExperience` section */}
-    <WorkExperience />
+      function initNavActiveState() {
+        const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-nav-link]')];
+        if (links.length === 0) return;
 
-    {/* Render the `Projects` section */}
-    <Projects />
+        const sections = links
+          .map((link) => {
+            const id = link.getAttribute('href')?.slice(1);
+            return id ? document.getElementById(id) : null;
+          })
+          .filter((section): section is HTMLElement => section instanceof HTMLElement);
 
-    {/* Render the `Repos` section */}
-    <Repos />
+        if (sections.length === 0) return;
 
-    {/* Render the `Articles` section */}
-    <Articles />
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
 
-    {/* Render the `Conferences` section */}
-    <Conferences />
+            if (visible[0]?.target.id) {
+              setActiveNavLink(`#${visible[0].target.id}`);
+            }
+          },
+          {
+            rootMargin: '-40% 0px -45% 0px',
+            threshold: [0, 0.15, 0.35, 0.55, 0.75, 1],
+          },
+        );
 
+        sections.forEach((section) => observer.observe(section));
+      }
+
+      initNavActiveState();
+      document.addEventListener('astro:page-load', initNavActiveState);
+    </script>
+
+    {educationItems.length > 0 && (
+      <section id="education" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-6 text-slate-950">
+        <div class="mb-4">
+          <p class="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">
+            // Academic Record
+          </p>
+          <h2 class="text-4xl font-medium tracking-[-0.045em] text-slate-950">
+            Education
+          </h2>
+        </div>
+
+        <div>
+          {educationItems.map((item, index) => {
+            const ongoing =
+              item.ongoing === false ? false : item.ongoing === true ? true : isOngoingEducation(item.dateRange);
+            const gpaParts = item.gpa ? educationGpaParts(item.gpa) : null;
+
+            return (
+              <article class="grid grid-cols-[auto_1fr] items-baseline gap-x-4 gap-y-1 border-t border-slate-200 py-6 first:border-t-0 sm:grid-cols-[auto_1fr_auto] sm:gap-x-6">
+                <span class="row-start-1 shrink-0 font-sans text-sm font-semibold tabular-nums leading-[1.38] text-amber-600">
+                  EDU.{String(index + 1).padStart(2, '0')}
+                </span>
+
+                <h3 class="row-start-1 m-0 min-w-0 text-base font-medium leading-[1.38] tracking-[-0.015em] text-slate-950">
+                  {item.degree}
+                </h3>
+
+                <p class="col-start-2 row-start-2 m-0 min-w-0 space-y-2.5 font-sans font-normal leading-snug text-slate-500">
+                  <span class="block text-[0.9rem]">
+                    {[item.department, item.university].filter(Boolean).join(', ')}
+                  </span>
+
+                  {item.thesis && (
+                    <span class="flex min-w-0 items-baseline gap-3">
+                      <span class="relative shrink-0 pl-5 font-mono text-[0.62rem] font-semibold uppercase leading-none tracking-[0.08em] text-slate-500">
+                        <span class="absolute left-0 top-1/2 inline-flex size-3 -translate-y-1/2 items-center justify-center text-slate-400" aria-hidden="true">
+                          <Icon icon={thesisIcon} ssr className="size-full" />
+                        </span>
+                        Thesis
+                      </span>
+                      <span class="font-heading min-w-0 text-[0.9rem] leading-none text-slate-500">
+                        {item.thesis}
+                      </span>
+                    </span>
+                  )}
+                </p>
+
+                <div class="col-span-2 row-start-3 mt-3 flex flex-col items-start gap-2 sm:col-span-1 sm:col-start-3 sm:row-start-1 sm:row-span-2 sm:mt-0 sm:items-end">
+                  <p class="m-0 font-mono text-[0.78rem] tabular-nums text-slate-950 sm:text-right">
+                    {educationDisplayDate(item.dateRange)}
+                  </p>
+
+                  <dl class="grid w-full min-w-[7.5rem] grid-cols-2 gap-x-4 sm:text-right">
+                    <div>
+                      <dt class="m-0 font-mono text-[0.6rem] font-medium uppercase tracking-[0.08em] text-slate-500">
+                        ECTS
+                      </dt>
+                      <dd class="m-0 mt-0.5 font-mono text-[0.8rem] font-semibold tabular-nums text-slate-950">
+                        {item.ects || '—'}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt class="m-0 font-mono text-[0.6rem] font-medium uppercase tracking-[0.08em] text-slate-500">
+                        GPA
+                      </dt>
+                      <dd class="m-0 mt-0.5 font-mono text-[0.8rem] font-semibold tabular-nums">
+                        {gpaParts ? (
+                          <>
+                            <span class="text-slate-950">{gpaParts.value}</span>
+                            <span class="inline-flex items-baseline font-normal text-[0.8em] leading-none text-slate-400">
+                              <span>/</span>
+                              <span>{gpaParts.denominator}</span>
+                            </span>
+                          </>
+                        ) : (
+                          <span class="text-slate-950">{item.gpa || '—'}</span>
+                        )}
+                      </dd>
+                    </div>
+                  </dl>
+
+                  {ongoing && (
+                    <span class="inline-flex items-center gap-1.5 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.08em] text-emerald-600">
+                      <span class="size-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
+                      Ongoing
+                    </span>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    {workExperienceItems.length > 0 && (
+      <section id="work-experience" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-6 text-slate-950">
+        <div class="mb-4">
+          <p class="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">
+            // Career History
+          </p>
+          <h2 class="text-4xl font-medium tracking-[-0.045em] text-slate-950">
+            Work Experience
+          </h2>
+        </div>
+
+        <div>
+          {workExperienceItems.map((item, index) => {
+            return (
+              <article class="grid grid-cols-[auto_1fr] items-baseline gap-x-4 gap-y-1 border-t border-slate-200 py-6 first:border-t-0 sm:grid-cols-[auto_1fr_auto] sm:gap-x-6">
+                <span class="row-start-1 shrink-0 font-sans text-sm font-semibold tabular-nums leading-[1.38] text-amber-600">
+                  WRK.{String(index + 1).padStart(2, '0')}
+                </span>
+
+                <h3 class="row-start-1 m-0 min-w-0 text-base font-medium leading-[1.38] tracking-[-0.015em] text-slate-950">
+                  {[item.role, item.project ? workProjectName(item.project) : ''].filter(Boolean).join(', ')}
+                </h3>
+
+                <p class="col-start-2 row-start-2 m-0 font-sans text-[0.9rem] font-normal leading-snug text-slate-500">
+                  {item.organization}
+                </p>
+
+                <div class="col-span-2 row-start-3 mt-3 flex flex-col items-start gap-2 sm:col-span-1 sm:col-start-3 sm:row-start-1 sm:row-span-2 sm:mt-0 sm:items-end">
+                  <p class="m-0 font-mono text-[0.78rem] tabular-nums text-slate-950 sm:text-right">
+                    {educationDisplayDate(item.dateRange)}
+                  </p>
+
+                  <dl class="grid w-full min-w-[7.5rem] grid-cols-2 gap-x-4 sm:text-right">
+                    <div>
+                      <dt class="m-0 font-mono text-[0.6rem] font-medium uppercase tracking-[0.08em] text-slate-500">
+                        Location
+                      </dt>
+                      <dd class="m-0 mt-0.5 font-mono text-[0.8rem] font-semibold text-slate-950">
+                        {item.locationType || '—'}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt class="m-0 font-mono text-[0.6rem] font-medium uppercase tracking-[0.08em] text-slate-500">
+                        Type
+                      </dt>
+                      <dd class="m-0 mt-0.5 font-mono text-[0.8rem] font-semibold text-slate-950">
+                        {item.relationshipType || '—'}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    {articleItems.length > 0 && (
+      <section id="articles" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-6 text-slate-950">
+        <div class="mb-4">
+          <p class="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">
+            // Publications
+          </p>
+          <h2 class="mb-4 text-4xl font-medium tracking-[-0.045em] text-slate-950">
+            Articles
+          </h2>
+
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[0.68rem] uppercase tracking-[0.08em] text-slate-500">
+            <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Sort articles">
+              <span>Sort</span>
+              <button
+                type="button"
+                data-article-sort="year"
+                data-sort-label="year"
+                data-sort-direction="desc"
+                aria-pressed="true"
+                class="article-toolbar-btn article-toolbar-btn--active rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                year ↓
+              </button>
+              <button
+                type="button"
+                data-article-sort="impactFactor"
+                data-sort-label="by IF"
+                data-sort-direction="desc"
+                aria-pressed="false"
+                class="article-toolbar-btn rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                by IF ↓
+              </button>
+              <button
+                type="button"
+                data-article-sort="citations"
+                data-sort-label="cites"
+                data-sort-direction="desc"
+                aria-pressed="false"
+                class="article-toolbar-btn rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                cites ↓
+              </button>
+            </div>
+
+            <span class="h-4 w-px bg-slate-200" aria-hidden="true"></span>
+
+            <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter articles">
+              <span>Filter</span>
+              <button
+                type="button"
+                data-article-filter="q1"
+                aria-pressed="false"
+                class="article-toolbar-btn article-filter-btn rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="size-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
+                  Q1 only
+                </span>
+              </button>
+              <button
+                type="button"
+                data-article-filter="openAccess"
+                aria-pressed="false"
+                class="article-toolbar-btn article-filter-btn rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                open access
+              </button>
+              <button
+                type="button"
+                data-article-filter="specialIssue"
+                aria-pressed="false"
+                class="article-toolbar-btn article-filter-btn rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                special issue
+              </button>
+              <button
+                type="button"
+                data-article-filter="firstAuthor"
+                aria-pressed="false"
+                class="article-toolbar-btn article-filter-btn rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                first author
+              </button>
+            </div>
+
+            <span
+              id="articles-shown-count"
+              class="ml-auto tabular-nums normal-case tracking-normal"
+              data-total={articleItems.length}
+            >
+              {articleItems.length} of {articleItems.length} shown
+            </span>
+          </div>
+        </div>
+
+        <div id="articles-grid" class="grid grid-cols-[repeat(auto-fill,minmax(21rem,1fr))] gap-4">
+          {articleItems.map((item, index) => {
+            const rowNumber = articleItems.length - index;
+            const authors = getAuthorSegments(item.authors, articleHighlightAuthor);
+            const kind = publicationKind(item.specialIssue);
+            const citationCount = articleNumericValue(item.citations);
+            const impactFactor = articleNumericValue(item.impactFactor);
+
+            return (
+              <article
+                data-year={item.year}
+                data-citations={citationCount}
+                data-impact-factor={impactFactor}
+                data-quartile={item.quartile || ''}
+                data-open-access={isOpenAccessArticle(item) ? 'true' : 'false'}
+                data-special-issue={item.specialIssue ? 'true' : 'false'}
+                data-first-author={isFirstAuthorArticle(item.authors, articleHighlightAuthor) ? 'true' : 'false'}
+                class="flex flex-col overflow-hidden rounded-[10px] border border-slate-200 bg-slate-50/80 px-[1.1rem] py-4"
+              >
+                <div class="mb-[0.85rem] flex min-h-6 items-center gap-2">
+                  <p class="flex min-w-0 flex-wrap items-center gap-2 text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-slate-500">
+                    <span class="text-amber-600" data-article-index>PUB.{String(rowNumber).padStart(2, '0')}</span>
+                    <span class="size-[3px] rounded-full bg-slate-400/50" aria-hidden="true"></span>
+                    {kind}
+                  </p>
+                  <div class="ml-auto inline-flex shrink-0 items-center gap-1.5 text-slate-500" aria-label="Publication links">
+                    <a
+                      href={googleScholarUrl(item.title)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex size-5 items-center justify-center text-slate-500 no-underline transition hover:text-slate-950"
+                      aria-label={`Search ${item.title} on Google Scholar`}
+                    >
+                      <Icon icon={googleScholarIcon} ssr className="h-4 w-3.5" aria-hidden="true" />
+                    </a>
+                    <a
+                      href={researchGateUrl(item.title)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex size-5 items-center justify-center text-slate-500 no-underline transition hover:text-slate-950"
+                      aria-label={`Search ${item.title} on ResearchGate`}
+                    >
+                      <Icon icon={researchGateIcon} ssr className="h-4 w-3.5" aria-hidden="true" />
+                    </a>
+                  </div>
+                </div>
+
+                <div class="flex flex-1 flex-col">
+                  {item.url ? (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="font-heading block min-h-[6.1rem] text-base font-medium leading-[1.38] tracking-[-0.015em] text-slate-950 no-underline transition hover:text-amber-700"
+                    >
+                      {item.title}
+                    </a>
+                  ) : (
+                    <h3 class="m-0 min-h-[6.1rem] text-base font-medium leading-[1.38] tracking-[-0.015em] text-slate-950">{item.title}</h3>
+                  )}
+
+                  <p class="font-heading mt-2 text-slate-500"><span>{item.journal}</span><span>, </span><span class="font-medium">{item.year}</span></p>
+
+                  <p class="mt-2.5 font-light leading-[1.5] text-slate-500">
+                    {authors.map((author, authorIndex) => (
+                      <>
+                        {authorIndex > 0 ? ', ' : ''}
+                        {author.highlight ? (
+                          <span class="border-b border-amber-500 pb-[0.05em] font-medium text-slate-950">
+                            {author.name}
+                          </span>
+                        ) : (
+                          author.name
+                        )}
+                      </>
+                    ))}
+                  </p>
+
+                  <div class="mt-auto pt-3.5">
+                    <div class="mb-3.5 h-px bg-slate-200" aria-hidden="true"></div>
+                    <dl class="grid grid-cols-3 divide-x divide-slate-200">
+                      <div class="pr-2">
+                        <dt class="flex items-center gap-1 text-[0.56rem] font-medium uppercase tracking-[0.1em] text-slate-500">
+                          <Icon icon={impactFactorIcon} ssr className="size-3 text-slate-400" aria-hidden="true" />
+                          IF
+                        </dt>
+                        <dd class="mt-0.5 text-[0.92rem] font-semibold tabular-nums text-slate-950">{metricValue(item.impactFactor)}</dd>
+                      </div>
+                      <div class="px-2">
+                        <dt class="flex items-center gap-1 text-[0.56rem] font-medium uppercase tracking-[0.1em] text-slate-500">
+                          <Icon icon={jcrIcon} ssr className="size-3 text-slate-400" aria-hidden="true" />
+                          JCR
+                        </dt>
+                        <dd class="mt-1 text-[0.82rem] font-semibold tabular-nums">
+                          {jcrBadgeClass(metricValue(item.quartile)) ? (
+                            <span class={`inline-flex min-w-8 items-center justify-center rounded-full px-2 py-0.5 ring-1 ring-inset ${jcrBadgeClass(metricValue(item.quartile))}`}>
+                              {metricValue(item.quartile)}
+                            </span>
+                          ) : (
+                            <span class="text-[0.92rem] text-slate-950">{metricValue(item.quartile)}</span>
+                          )}
+                        </dd>
+                      </div>
+                      <div class="pl-2">
+                        <dt class="flex items-center gap-1 text-[0.56rem] font-medium uppercase tracking-[0.1em] text-slate-500">
+                          <Icon icon={citationsIcon} ssr className="size-3 text-slate-400" aria-hidden="true" />
+                          Cites
+                        </dt>
+                        <dd class="mt-0.5 text-[0.92rem] font-semibold tabular-nums text-slate-950">{metricValue(item.citations || '0')}</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <style>
+          .article-toolbar-btn {
+            border-color: rgb(226 232 240);
+            background-color: white;
+            color: rgb(100 116 139);
+          }
+
+          .article-toolbar-btn:hover {
+            border-color: rgb(203 213 225);
+          }
+
+          .article-toolbar-btn--active {
+            border-color: rgb(217 119 6 / 0.55);
+            background-color: rgb(255 251 235);
+            color: rgb(180 83 9);
+          }
+        </style>
+
+        <script>
+          let articleToolbarReady = false;
+
+          function setArticleToolbarButtonState(button: HTMLButtonElement, isActive: boolean) {
+            button.setAttribute('aria-pressed', String(isActive));
+            button.classList.toggle('article-toolbar-btn--active', isActive);
+          }
+
+          function articleMatchesFilters(article: HTMLElement, activeFilters: string[]) {
+            if (activeFilters.length === 0) return true;
+
+            return activeFilters.every((filter) => {
+              if (filter === 'q1') return article.dataset.quartile === 'Q1';
+              if (filter === 'openAccess') return article.dataset.openAccess === 'true';
+              if (filter === 'specialIssue') return article.dataset.specialIssue === 'true';
+              if (filter === 'firstAuthor') return article.dataset.firstAuthor === 'true';
+              return true;
+            });
+          }
+
+          function compareArticles(
+            a: HTMLElement,
+            b: HTMLElement,
+            sortBy: string,
+            direction: 'asc' | 'desc',
+          ) {
+            let result = 0;
+
+            if (sortBy === 'citations') {
+              result = Number(b.dataset.citations) - Number(a.dataset.citations);
+            } else if (sortBy === 'impactFactor') {
+              result = Number(b.dataset.impactFactor) - Number(a.dataset.impactFactor);
+            } else {
+              result = Number(b.dataset.year) - Number(a.dataset.year);
+            }
+
+            return direction === 'asc' ? -result : result;
+          }
+
+          function updateSortButtonLabel(button: HTMLButtonElement) {
+            const label = button.dataset.sortLabel;
+            const direction = button.dataset.sortDirection === 'asc' ? 'asc' : 'desc';
+            if (!label) return;
+
+            button.textContent = `${label} ${direction === 'desc' ? '↓' : '↑'}`;
+          }
+
+          function getSortDirection(buttons: HTMLButtonElement[], sortBy: string) {
+            const button = buttons.find((item) => item.dataset.articleSort === sortBy);
+            return button?.dataset.sortDirection === 'asc' ? 'asc' : 'desc';
+          }
+
+          function updateArticleRowNumbers(grid: HTMLElement) {
+            const visibleArticles = [...grid.children].filter(
+              (article) => !article.classList.contains('hidden'),
+            ) as HTMLElement[];
+
+            visibleArticles.forEach((article, index) => {
+              const label = article.querySelector('[data-article-index]');
+              if (label) {
+                label.textContent = `PUB.${String(visibleArticles.length - index).padStart(2, '0')}`;
+              }
+            });
+          }
+
+          function updateArticleShownCount(grid: HTMLElement, countEl: HTMLElement) {
+            const total = Number(countEl.dataset.total) || grid.children.length;
+            const shown = [...grid.children].filter((article) => !article.classList.contains('hidden')).length;
+            countEl.textContent = `${shown} of ${total} shown`;
+          }
+
+          function applyArticleToolbar(
+            grid: HTMLElement,
+            countEl: HTMLElement,
+            sortBy: string,
+            sortDirection: 'asc' | 'desc',
+            activeFilters: string[],
+          ) {
+            const articles = [...grid.children] as HTMLElement[];
+
+            articles.sort((a, b) => compareArticles(a, b, sortBy, sortDirection));
+            articles.forEach((article) => grid.appendChild(article));
+
+            articles.forEach((article) => {
+              const visible = articleMatchesFilters(article, activeFilters);
+              article.classList.toggle('hidden', !visible);
+            });
+
+            updateArticleRowNumbers(grid);
+            updateArticleShownCount(grid, countEl);
+          }
+
+          function initArticleToolbar() {
+            const grid = document.getElementById('articles-grid');
+            const countEl = document.getElementById('articles-shown-count');
+            const sortButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-article-sort]')];
+            const filterButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-article-filter]')];
+
+            if (!grid || !countEl || sortButtons.length === 0) return;
+
+            if (articleToolbarReady) {
+              const activeSort =
+                sortButtons.find((button) => button.getAttribute('aria-pressed') === 'true')?.dataset.articleSort ?? 'year';
+              const activeFilters = filterButtons
+                .filter((button) => button.getAttribute('aria-pressed') === 'true')
+                .map((button) => button.dataset.articleFilter)
+                .filter((filter): filter is string => Boolean(filter));
+
+              applyArticleToolbar(
+                grid,
+                countEl,
+                activeSort,
+                getSortDirection(sortButtons, activeSort),
+                activeFilters,
+              );
+              return;
+            }
+
+            let activeSort = 'year';
+            const activeFilters = new Set<string>();
+
+            sortButtons.forEach((button) => {
+              button.addEventListener('click', () => {
+                const sortBy = button.dataset.articleSort;
+                if (!sortBy) return;
+
+                const isAlreadyActive = activeSort === sortBy;
+
+                if (isAlreadyActive) {
+                  const nextDirection = button.dataset.sortDirection === 'asc' ? 'desc' : 'asc';
+                  button.dataset.sortDirection = nextDirection;
+                  updateSortButtonLabel(button);
+                  applyArticleToolbar(grid, countEl, activeSort, nextDirection, [...activeFilters]);
+                  return;
+                }
+
+                activeSort = sortBy;
+                sortButtons.forEach((sortButton) => {
+                  setArticleToolbarButtonState(sortButton, sortButton.dataset.articleSort === sortBy);
+                });
+                applyArticleToolbar(
+                  grid,
+                  countEl,
+                  activeSort,
+                  getSortDirection(sortButtons, activeSort),
+                  [...activeFilters],
+                );
+              });
+            });
+
+            filterButtons.forEach((button) => {
+              button.addEventListener('click', () => {
+                const filter = button.dataset.articleFilter;
+                if (!filter) return;
+
+                if (activeFilters.has(filter)) {
+                  activeFilters.delete(filter);
+                  setArticleToolbarButtonState(button, false);
+                } else {
+                  activeFilters.add(filter);
+                  setArticleToolbarButtonState(button, true);
+                }
+
+                applyArticleToolbar(
+                  grid,
+                  countEl,
+                  activeSort,
+                  getSortDirection(sortButtons, activeSort),
+                  [...activeFilters],
+                );
+              });
+            });
+
+            articleToolbarReady = true;
+            applyArticleToolbar(
+              grid,
+              countEl,
+              activeSort,
+              getSortDirection(sortButtons, activeSort),
+              [...activeFilters],
+            );
+          }
+
+          initArticleToolbar();
+          document.addEventListener('astro:page-load', initArticleToolbar);
+        </script>
+      </section>
+    )}
+
+    {conferenceItems.length > 0 && (
+      <section id="conferences" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-6 text-slate-950">
+        <div class="mb-4">
+          <p class="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">
+            // Conference Proceedings
+          </p>
+          <h2 class="mb-4 text-4xl font-medium tracking-[-0.045em] text-slate-950">
+            Conferences
+          </h2>
+
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[0.68rem] uppercase tracking-[0.08em] text-slate-500">
+            <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Sort conferences">
+              <span>Sort</span>
+              <button
+                type="button"
+                data-conference-sort="year"
+                data-sort-label="year"
+                data-sort-direction="desc"
+                aria-pressed="true"
+                class="article-toolbar-btn article-toolbar-btn--active rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                year ↓
+              </button>
+              <button
+                type="button"
+                data-conference-sort="citations"
+                data-sort-label="cites"
+                data-sort-direction="desc"
+                aria-pressed="false"
+                class="article-toolbar-btn rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                cites ↓
+              </button>
+              <button
+                type="button"
+                data-conference-sort="date"
+                data-sort-label="date"
+                data-sort-direction="desc"
+                aria-pressed="false"
+                class="article-toolbar-btn rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                date ↓
+              </button>
+            </div>
+
+            <span class="h-4 w-px bg-slate-200" aria-hidden="true"></span>
+
+            <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter conferences">
+              <span>Filter</span>
+              <button
+                type="button"
+                data-conference-filter="firstAuthor"
+                aria-pressed="false"
+                class="article-toolbar-btn article-filter-btn rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                first author
+              </button>
+              <button
+                type="button"
+                data-conference-filter="greece"
+                aria-pressed="false"
+                class="article-toolbar-btn article-filter-btn rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                greece
+              </button>
+              <button
+                type="button"
+                data-conference-filter="ieee"
+                aria-pressed="false"
+                class="article-toolbar-btn article-filter-btn rounded-full border px-3 py-1 normal-case tracking-normal transition"
+              >
+                ieee
+              </button>
+            </div>
+
+            <span
+              id="conferences-shown-count"
+              class="ml-auto tabular-nums normal-case tracking-normal"
+              data-total={conferenceItems.length}
+            >
+              {conferenceItems.length} of {conferenceItems.length} shown
+            </span>
+          </div>
+        </div>
+
+        <div id="conferences-grid" class="grid grid-cols-[repeat(auto-fill,minmax(21rem,1fr))] gap-4">
+          {conferenceItems.map((item, index) => {
+            const rowNumber = conferenceItems.length - index;
+            const authors = getAuthorSegments(item.authors, conferenceHighlightAuthor);
+            const conference = conferenceCode(item.conferenceName, item.year);
+            const date = monthYear(item.conferenceDate, item.year);
+            const citationCount = articleNumericValue(item.citations);
+
+            return (
+              <article
+                data-year={item.year}
+                data-citations={citationCount}
+                data-date={conferenceDateValue(item.conferenceDate)}
+                data-first-author={isFirstAuthorArticle(item.authors, conferenceHighlightAuthor) ? 'true' : 'false'}
+                data-greece={isGreeceConference(item.conferenceLocation) ? 'true' : 'false'}
+                data-ieee={isIeeeConference(item.conferenceName) ? 'true' : 'false'}
+                class="flex flex-col overflow-hidden rounded-[10px] border border-slate-200 bg-slate-50/80 px-[1.1rem] py-4"
+              >
+                <div class="mb-[0.85rem] flex min-h-6 items-center gap-2">
+                  <p class="flex min-w-0 flex-wrap items-center gap-2 text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-slate-500">
+                    <span class="text-amber-600" data-conference-index>CONF.{String(rowNumber).padStart(2, '0')}</span>
+                    <span class="size-[3px] rounded-full bg-slate-400/50" aria-hidden="true"></span>
+                    Conference Paper
+                  </p>
+                  <div class="ml-auto inline-flex shrink-0 items-center gap-1.5 text-slate-500" aria-label="Publication links">
+                    <a
+                      href={googleScholarUrl(item.title)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex size-5 items-center justify-center text-slate-500 no-underline transition hover:text-slate-950"
+                      aria-label={`Search ${item.title} on Google Scholar`}
+                    >
+                      <Icon icon={googleScholarIcon} ssr className="h-4 w-3.5" aria-hidden="true" />
+                    </a>
+                    <a
+                      href={researchGateUrl(item.title)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex size-5 items-center justify-center text-slate-500 no-underline transition hover:text-slate-950"
+                      aria-label={`Search ${item.title} on ResearchGate`}
+                    >
+                      <Icon icon={researchGateIcon} ssr className="h-4 w-3.5" aria-hidden="true" />
+                    </a>
+                  </div>
+                </div>
+
+                <div class="flex flex-1 flex-col">
+                  <h3 data-conference-title class="m-0 text-base font-medium leading-[1.38] tracking-[-0.015em] text-slate-950">{item.title}</h3>
+
+                  <div class="mt-2.5">
+                    <p data-conference-authors class="m-0 font-light leading-[1.5] text-slate-500">
+                      {authors.map((author, authorIndex) => (
+                        <>
+                          {authorIndex > 0 ? ', ' : ''}
+                          {author.highlight ? (
+                            <span class="border-b border-amber-500 pb-[0.05em] font-medium text-slate-950">
+                              {author.name}
+                            </span>
+                          ) : (
+                            author.name
+                          )}
+                        </>
+                      ))}
+                    </p>
+
+                    <p class="font-heading m-0 mt-1.5 text-[0.78rem] font-light leading-[1.5] text-slate-500">
+                      <span class="font-medium text-slate-950">{conference}</span>
+                      <span> · {item.conferenceLocation}</span>
+                    </p>
+                  </div>
+
+                  <div class="mt-auto pt-3.5">
+                    <div class="mb-3.5 h-px bg-slate-200" aria-hidden="true"></div>
+                    <dl class="grid grid-cols-2 divide-x divide-slate-200">
+                      <div class="pr-2">
+                        <dt class="flex items-center gap-1 text-[0.56rem] font-medium uppercase tracking-[0.1em] text-slate-500">
+                          <Icon icon={yearIcon} ssr className="size-3 text-slate-400" aria-hidden="true" />
+                          Date
+                        </dt>
+                        <dd class="mt-0.5 text-[0.92rem] font-semibold tabular-nums text-slate-950">{date}</dd>
+                      </div>
+                      <div class="pl-2">
+                        <dt class="flex items-center gap-1 text-[0.56rem] font-medium uppercase tracking-[0.1em] text-slate-500">
+                          <Icon icon={citationsIcon} ssr className="size-3 text-slate-400" aria-hidden="true" />
+                          Cites
+                        </dt>
+                        <dd class="mt-0.5 text-[0.92rem] font-semibold tabular-nums text-slate-950">{metricValue(item.citations || '0')}</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <script>
+          let conferenceToolbarReady = false;
+
+          function setConferenceToolbarButtonState(button: HTMLButtonElement, isActive: boolean) {
+            button.setAttribute('aria-pressed', String(isActive));
+            button.classList.toggle('article-toolbar-btn--active', isActive);
+          }
+
+          function conferenceMatchesFilters(item: HTMLElement, activeFilters: string[]) {
+            if (activeFilters.length === 0) return true;
+
+            return activeFilters.every((filter) => {
+              if (filter === 'firstAuthor') return item.dataset.firstAuthor === 'true';
+              if (filter === 'greece') return item.dataset.greece === 'true';
+              if (filter === 'ieee') return item.dataset.ieee === 'true';
+              return true;
+            });
+          }
+
+          function compareConferences(
+            a: HTMLElement,
+            b: HTMLElement,
+            sortBy: string,
+            direction: 'asc' | 'desc',
+          ) {
+            let result = 0;
+
+            if (sortBy === 'citations') {
+              result = Number(b.dataset.citations) - Number(a.dataset.citations);
+            } else if (sortBy === 'date') {
+              result = Number(b.dataset.date) - Number(a.dataset.date);
+            } else {
+              result = Number(b.dataset.year) - Number(a.dataset.year);
+            }
+
+            return direction === 'asc' ? -result : result;
+          }
+
+          function updateConferenceSortButtonLabel(button: HTMLButtonElement) {
+            const label = button.dataset.sortLabel;
+            const direction = button.dataset.sortDirection === 'asc' ? 'asc' : 'desc';
+            if (!label) return;
+
+            button.textContent = `${label} ${direction === 'desc' ? '↓' : '↑'}`;
+          }
+
+          function getConferenceSortDirection(buttons: HTMLButtonElement[], sortBy: string) {
+            const button = buttons.find((item) => item.dataset.conferenceSort === sortBy);
+            return button?.dataset.sortDirection === 'asc' ? 'asc' : 'desc';
+          }
+
+          function updateConferenceRowNumbers(grid: HTMLElement) {
+            const visibleItems = [...grid.children].filter(
+              (item) => !item.classList.contains('hidden'),
+            ) as HTMLElement[];
+
+            visibleItems.forEach((item, index) => {
+              const label = item.querySelector('[data-conference-index]');
+              if (label) {
+                label.textContent = `CONF.${String(visibleItems.length - index).padStart(2, '0')}`;
+              }
+            });
+          }
+
+          function updateConferenceShownCount(grid: HTMLElement, countEl: HTMLElement) {
+            const total = Number(countEl.dataset.total) || grid.children.length;
+            const shown = [...grid.children].filter((item) => !item.classList.contains('hidden')).length;
+            countEl.textContent = `${shown} of ${total} shown`;
+          }
+
+          function equalizeConferenceRows(grid: HTMLElement, selector: string) {
+            const elements = [...grid.querySelectorAll<HTMLElement>(selector)];
+
+            elements.forEach((element) => {
+              element.style.minHeight = '';
+            });
+
+            const visibleElements = elements.filter((element) => {
+              const card = element.closest('article');
+              return card instanceof HTMLElement && !card.classList.contains('hidden');
+            });
+
+            const rowGroups = new Map<number, HTMLElement[]>();
+
+            visibleElements.forEach((element) => {
+              const card = element.closest('article');
+              if (!(card instanceof HTMLElement)) return;
+
+              const rowTop = Math.round(card.getBoundingClientRect().top);
+              rowGroups.set(rowTop, [...(rowGroups.get(rowTop) ?? []), element]);
+            });
+
+            rowGroups.forEach((rowElements) => {
+              const maxHeight = Math.max(...rowElements.map((element) => element.getBoundingClientRect().height));
+              rowElements.forEach((element) => {
+                element.style.minHeight = `${Math.ceil(maxHeight)}px`;
+              });
+            });
+          }
+
+          function equalizeConferenceCardRows(grid: HTMLElement) {
+            equalizeConferenceRows(grid, '[data-conference-title]');
+            equalizeConferenceRows(grid, '[data-conference-authors]');
+          }
+
+          function applyConferenceToolbar(
+            grid: HTMLElement,
+            countEl: HTMLElement,
+            sortBy: string,
+            sortDirection: 'asc' | 'desc',
+            activeFilters: string[],
+          ) {
+            const items = [...grid.children] as HTMLElement[];
+
+            items.sort((a, b) => compareConferences(a, b, sortBy, sortDirection));
+            items.forEach((item) => grid.appendChild(item));
+
+            items.forEach((item) => {
+              const visible = conferenceMatchesFilters(item, activeFilters);
+              item.classList.toggle('hidden', !visible);
+            });
+
+            updateConferenceRowNumbers(grid);
+            updateConferenceShownCount(grid, countEl);
+            requestAnimationFrame(() => equalizeConferenceCardRows(grid));
+          }
+
+          function initConferenceToolbar() {
+            const grid = document.getElementById('conferences-grid');
+            const countEl = document.getElementById('conferences-shown-count');
+            const sortButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-conference-sort]')];
+            const filterButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-conference-filter]')];
+
+            if (!grid || !countEl || sortButtons.length === 0) return;
+
+            if (conferenceToolbarReady) {
+              const activeSort =
+                sortButtons.find((button) => button.getAttribute('aria-pressed') === 'true')?.dataset.conferenceSort ?? 'year';
+              const activeFilters = filterButtons
+                .filter((button) => button.getAttribute('aria-pressed') === 'true')
+                .map((button) => button.dataset.conferenceFilter)
+                .filter((filter): filter is string => Boolean(filter));
+
+              applyConferenceToolbar(
+                grid,
+                countEl,
+                activeSort,
+                getConferenceSortDirection(sortButtons, activeSort),
+                activeFilters,
+              );
+              return;
+            }
+
+            let activeSort = 'year';
+            const activeFilters = new Set<string>();
+
+            sortButtons.forEach((button) => {
+              button.addEventListener('click', () => {
+                const sortBy = button.dataset.conferenceSort;
+                if (!sortBy) return;
+
+                const isAlreadyActive = activeSort === sortBy;
+
+                if (isAlreadyActive) {
+                  const nextDirection = button.dataset.sortDirection === 'asc' ? 'desc' : 'asc';
+                  button.dataset.sortDirection = nextDirection;
+                  updateConferenceSortButtonLabel(button);
+                  applyConferenceToolbar(grid, countEl, activeSort, nextDirection, [...activeFilters]);
+                  return;
+                }
+
+                activeSort = sortBy;
+                sortButtons.forEach((sortButton) => {
+                  setConferenceToolbarButtonState(sortButton, sortButton.dataset.conferenceSort === sortBy);
+                });
+                applyConferenceToolbar(
+                  grid,
+                  countEl,
+                  activeSort,
+                  getConferenceSortDirection(sortButtons, activeSort),
+                  [...activeFilters],
+                );
+              });
+            });
+
+            filterButtons.forEach((button) => {
+              button.addEventListener('click', () => {
+                const filter = button.dataset.conferenceFilter;
+                if (!filter) return;
+
+                if (activeFilters.has(filter)) {
+                  activeFilters.delete(filter);
+                  setConferenceToolbarButtonState(button, false);
+                } else {
+                  activeFilters.add(filter);
+                  setConferenceToolbarButtonState(button, true);
+                }
+
+                applyConferenceToolbar(
+                  grid,
+                  countEl,
+                  activeSort,
+                  getConferenceSortDirection(sortButtons, activeSort),
+                  [...activeFilters],
+                );
+              });
+            });
+
+            window.addEventListener('resize', () => {
+              requestAnimationFrame(() => equalizeConferenceCardRows(grid));
+            });
+
+            document.fonts?.ready.then(() => {
+              equalizeConferenceCardRows(grid);
+            });
+
+            conferenceToolbarReady = true;
+            applyConferenceToolbar(
+              grid,
+              countEl,
+              activeSort,
+              getConferenceSortDirection(sortButtons, activeSort),
+              [...activeFilters],
+            );
+          }
+
+          initConferenceToolbar();
+          document.addEventListener('astro:page-load', initConferenceToolbar);
+        </script>
+      </section>
+    )}
+
+    {repoItems.length > 0 && (
+      <section id="repos" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-6 text-slate-950">
+        <div class="mb-4">
+          <p class="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">
+            // Source
+          </p>
+          <h2 class="text-4xl font-medium tracking-[-0.045em] text-slate-950">
+            Repos
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(21rem,1fr))] gap-4">
+          {repoItems.map((repo) => (
+            <a
+              href={repo.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex flex-col overflow-hidden rounded-[10px] border border-slate-200 bg-slate-50/80 no-underline transition duration-200 hover:border-amber-500"
+            >
+              <div class="flex items-center justify-between gap-2 border-b border-slate-200 px-4 py-3">
+                <div class="flex min-w-0 items-center gap-2">
+                  <span
+                    class="size-2 shrink-0 rounded-full"
+                    style={`background-color: ${repo.languageColor || '#94a3b8'}`}
+                    aria-hidden="true"
+                  ></span>
+                  <span class="truncate font-mono text-sm font-semibold text-slate-950">
+                    {repoOwner}/{repo.name}
+                  </span>
+                </div>
+                <span
+                  class={`inline-flex shrink-0 rounded-full px-2 py-0.5 text-[0.56rem] font-semibold uppercase tracking-[0.08em] ring-1 ring-inset ${repoStatusClass(repo.status)}`}
+                >
+                  {repoStatusLabel(repo.status)}
+                </span>
+              </div>
+
+              <div class="flex flex-1 flex-col px-4 py-3">
+                <p class="m-0 text-[0.82rem] font-light leading-relaxed text-slate-600">
+                  {repo.description}
+                </p>
+
+                {repo.tags.length > 0 && (
+                  <div class="mt-3 flex flex-wrap gap-1.5">
+                    {repo.tags.map((tag) => (
+                      <span class="rounded-md bg-slate-100 px-2 py-0.5 font-mono text-[0.62rem] text-slate-500">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div class="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 px-4 py-2.5 text-[0.68rem] text-slate-500">
+                <span class="inline-flex items-center gap-1.5">
+                  <span
+                    class="size-1.5 rounded-full"
+                    style={`background-color: ${repo.languageColor || '#94a3b8'}`}
+                    aria-hidden="true"
+                  ></span>
+                  {repo.language}
+                </span>
+
+                {repo.license && (
+                  <span class="inline-flex items-center gap-1">
+                    <Icon icon={licenseIcon} ssr className="size-3 text-slate-400" aria-hidden="true" />
+                    {repo.license}
+                  </span>
+                )}
+
+                {repo.updatedAt && (
+                  <span class="inline-flex items-center gap-1">
+                    <Icon icon={dateIcon} ssr className="size-3 text-slate-400" aria-hidden="true" />
+                    {repo.updatedAt}
+                  </span>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <Footer />
   </main>
 </Main>

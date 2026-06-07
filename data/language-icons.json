@@ -1,0 +1,50 @@
+{
+  "Astro": {
+    "icon": "SiAstro",
+    "color": "#ff5a03"
+  },
+  "TypeScript": {
+    "icon": "SiTypescript",
+    "color": "#fcd34d"
+  },
+  "JavaScript": {
+    "icon": "SiJavascript",
+    "color": "#fcd34d"
+  },
+  "Python": {
+    "icon": "SiPython",
+    "color": "#fcd34d"
+  },
+  "React": {
+    "icon": "SiReact",
+    "color": "#61dafb"
+  },
+  "Next.js": {
+    "icon": "SiNextdotjs",
+    "color": "currentColor"
+  },
+  "Node.js": {
+    "icon": "SiNodedotjs",
+    "color": "#5fa04e"
+  },
+  "Tailwind CSS": {
+    "icon": "SiTailwindcss",
+    "color": "#38bdf8"
+  },
+  "HTML": {
+    "icon": "SiHtml5",
+    "color": "#e34f26"
+  },
+  "CSS": {
+    "icon": "SiCss",
+    "color": "#1572b6"
+  },
+  "Docker": {
+    "icon": "SiDocker",
+    "color": "#2496ed"
+  },
+  "PostgreSQL": {
+    "icon": "SiPostgresql",
+    "color": "#4169e1"
+  }
+}

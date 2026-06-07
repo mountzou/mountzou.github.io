@@ -9,9 +9,16 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/react": "^5.0.0",
     "@astrojs/sitemap": "^3.7.1",
+    "@iconify-json/academicons": "^1.2.4",
+    "@iconify-json/simple-icons": "^1.2.85",
+    "@iconify/react": "^6.0.2",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.17.1",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-icons": "^5.6.0",
     "tailwindcss": "^4.1.18"
   }
 }

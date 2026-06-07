@@ -6,7 +6,11 @@
       "school": "School of Information Sciences & Technology",
       "department": "Department of Informatics",
       "location": "10434 Athens, Greece",
-      "dateRange": "09.2024 – Present"
+      "dateRange": "09.2024 – 06.2026",
+      "ongoing": false,
+      "thesis": "Not applicable",
+      "ects": "75",
+      "gpa": "9.14/10"
     },
     {
       "degree": "MBA in Technoeconomic Systems",
@@ -15,7 +19,10 @@
       "department": "Department of Electrical & Computer Engineering",
       "location": "15772 Athens, Greece",
       "dateRange": "02.2021 – 06.2023",
-      "specialization": "Management & Entrepreneurship"
+      "specialization": "Management & Entrepreneurship",
+      "thesis": "Strategic planning frameworks for energy-sector digital transformation",
+      "ects": "120",
+      "gpa": "9.08/10"
     },
     {
       "degree": "Integrated M.Eng. in Electrical and Computer Engineering",
@@ -24,7 +31,10 @@
       "department": "Department of Electrical and Computer Engineering",
       "location": "26504 Patras, Greece",
       "dateRange": "09.2012 – 09.2019",
-      "specialization": "Hardware and Software"
+      "specialization": "Hardware and Software",
+      "thesis": "Wearable sensing platform for unobtrusive physiological monitoring",
+      "ects": "300",
+      "gpa": "Very Good"
     }
   ]
 }

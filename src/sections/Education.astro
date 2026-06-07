@@ -2,60 +2,53 @@
 import CardTitle from "../components/CardTitle.astro";
 import SectionTitle from "../components/SectionTitle.astro";
 import BadgeDate from "../components/BadgeDateRange.astro";
-
-import educationData from "../content/education.json";
-
-const { items } = educationData;
-
-const hasText = (value) => typeof value === "string" && value.trim() !== "";
-
-const itemsWithDegree = items.filter((item) => hasText(item.degree));
+import { educationItems } from "../lib/portfolio";
 ---
 
-{itemsWithDegree.length > 0 && (
-  <section id="education" class="scroll-mt-20 py-6">
-    <div class="mx-auto max-w-6xl px-4">
+{educationItems.length > 0 && (
+  <section id="education" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-6 text-slate-950">
+    <div>
       <SectionTitle title="Education" />
 
-      <div class="space-y-4 font-light text-muted-foreground">
-        {itemsWithDegree.map((item) => {
+      <div>
+        {educationItems.map((item) => {
           const departmentSchool = [item.department, item.school]
-            .filter((value) => typeof value === "string" && value.trim() !== "")
+            .filter(Boolean)
             .join(", ");
 
           const universityLocation = [item.university, item.location]
-            .filter((value) => typeof value === "string" && value.trim() !== "")
+            .filter(Boolean)
             .join(" — ");
 
           return (
-            <div class="rounded-lg bg-card p-4">
-              <div class="space-y-2 leading-loose md:hidden">
+            <div>
+              <div>
                 <BadgeDate label={item.dateRange} />
                 <CardTitle title={item.degree} />
 
                 {departmentSchool && (
-                  <p class="text-sm text-muted-foreground">{departmentSchool}</p>
+                  <p>{departmentSchool}</p>
                 )}
 
                 {universityLocation && (
-                  <p class="text-sm text-muted-foreground">{universityLocation}</p>
+                  <p>{universityLocation}</p>
                 )}
               </div>
 
-              <div class="hidden md:block">
-                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <div>
+                <div>
                   <CardTitle title={item.degree} />
                   <BadgeDate label={item.dateRange} />
                 </div>
 
                 {departmentSchool && (
-                  <p class="mt-2 text-sm text-muted-foreground">
+                  <p>
                     {departmentSchool}
                   </p>
                 )}
 
                 {universityLocation && (
-                  <p class="mt-2 text-sm text-muted-foreground">
+                  <p>
                     {universityLocation}
                   </p>
                 )}

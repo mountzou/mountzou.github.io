@@ -7,29 +7,6 @@ interface Props {
 const { title } = Astro.props;
 ---
 
-<span class="sticky-sentinel" aria-hidden="true" data-sticky-sentinel></span>
-<div class="sticky-section-header-root">
-  <h2 class="text-3xl font-medium">{title}</h2>
+<div>
+  <h2>{title}</h2>
 </div>
-
-<script>
-  function initStickyObservers() {
-    document.querySelectorAll<HTMLElement>('[data-sticky-sentinel]').forEach((sentinel) => {
-      const stickyRoot = sentinel.nextElementSibling;
-      if (!stickyRoot?.classList.contains('sticky-section-header-root')) return;
-
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          stickyRoot.classList.toggle('is-stuck', !entry.isIntersecting);
-        },
-        { threshold: 0, rootMargin: '0px', root: null }
-      );
-      observer.observe(sentinel);
-    });
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initStickyObservers);
-  } else {
-    initStickyObservers();
-  }
-</script>
