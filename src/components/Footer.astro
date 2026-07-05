@@ -1,12 +1,48 @@
+---
+import { Icon } from '@iconify/react/offline';
+import { icons as simpleIcons } from '@iconify-json/simple-icons';
+import { socialLinks } from '../config/site';
+
+const iconSize = 24;
+
+const linkedinIcon = { ...simpleIcons.icons.linkedin, width: iconSize, height: iconSize };
+const githubIcon = { ...simpleIcons.icons.github, width: iconSize, height: iconSize };
+const researchGateIcon = { ...simpleIcons.icons.researchgate, width: iconSize, height: iconSize };
+const googleScholarIcon = { ...simpleIcons.icons.googlescholar, width: iconSize, height: iconSize };
+
+const socialItems = [
+  { href: socialLinks.linkedin, label: 'LinkedIn', icon: linkedinIcon },
+  { href: socialLinks.github, label: 'GitHub', icon: githubIcon },
+  { href: socialLinks.researchgate, label: 'ResearchGate', icon: researchGateIcon },
+  { href: socialLinks.googleScholar, label: 'Google Scholar', icon: googleScholarIcon },
+];
+---
+
 <footer class="mt-8 border-t border-slate-200 bg-white">
   <div class="mx-auto max-w-6xl px-1 py-10">
-    <div>
-      <p class="m-0 font-heading text-2xl font-medium tracking-[-0.02em] text-slate-950">
-        Chris Mountzouris
-      </p>
-      <p class="mt-2 max-w-sm text-[0.82rem] font-normal leading-relaxed text-slate-500">
-        Researcher in AI, sensing and digital twins for indoor environmental quality &amp; energy.
-      </p>
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <p class="m-0 font-heading text-2xl font-medium tracking-[-0.02em] text-slate-950">
+          Chris Mountzouris
+        </p>
+        <p class="mt-2 max-w-sm text-[0.82rem] font-normal leading-relaxed text-slate-500">
+          Researcher in AI, sensing and digital twins for indoor environmental quality &amp; energy.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3 sm:pt-1" aria-label="Social profiles">
+        {socialItems.map((item) => (
+          <a
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center text-slate-500 no-underline transition hover:text-slate-950"
+            aria-label={item.label}
+          >
+            <Icon icon={item.icon} ssr width="1.25rem" height="1.25rem" aria-hidden="true" />
+          </a>
+        ))}
+      </div>
     </div>
   </div>
 </footer>
